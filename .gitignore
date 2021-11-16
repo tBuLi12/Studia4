@@ -11,8 +11,9 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
-.settings
-.project
+studia4/.settings
+studia4/.project
+studia4/.classpath
 
 # Compiled class file
 *.class
