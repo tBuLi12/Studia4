@@ -40,3 +40,6 @@ Główna logika programu będzie oddzielona od bazy danych oraz interfejsów uż
 ## Sposoby Testowania Aplikacji
 W celu sprawdzenia poprawności działania programu zostaną utworzone boty symulujące działania użytkownika. Dodatkowo zostaną przeprowadzone testy funkcjonalne UI oraz zasymulowane zostaną sytuacje specjalne mn. in. rejestracja na przedmioty „kto pierwszy”, układanie prawidłowego planu zajęć, czy dodawanie lub usuwanie studentów.
 
+## Uruchamianie Projektu
+Uruchomienie aplikacji wymaga posiadania javy 17 oraz mavena 3.8.3.
+
