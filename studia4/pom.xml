@@ -35,40 +35,26 @@
       <artifactId>javafx-fxml</artifactId>
       <version>13</version>
   </dependency>
-  <!-- <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
+  <dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc8</artifactId>
+    <version>21.1.0.0</version>
   </dependency>
   <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-jdbc</artifactId>
+    <groupId>com.zaxxer</groupId>
+    <artifactId>HikariCP</artifactId>
+    <version>3.4.5</version>
   </dependency>
-  <dependency>
-    <groupId>com.h2database</groupId>
-    <artifactId>h2</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <version>${lombok.version}</version>
-    <scope>provided</scope>
-  </dependency>
-  <dependency>
-    <groupId>org.bgee.log4jdbc-log4j2</groupId>
-    <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-    <version>${log4jdbc.log4j2.version}</version>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-test</artifactId>
-    <scope>test</scope>
-  </dependency>
-  <dependency>
-    <groupId>com.jayway.restassured</groupId>
-    <artifactId>rest-assured</artifactId>
-    <version>${rest.assured.version}</version>
-    <scope>test</scope>
-  </dependency> -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+      <version>2.1.7.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>2.5.5</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -80,10 +66,6 @@
           <version>3.1.0</version>
         </plugin>
         <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
@@ -123,7 +105,7 @@
                   <!-- Usage: mvn clean javafx:run -->
                   <id>default-cli</id>
                   <configuration>
-                      <mainClass>com.papz22.studia4.App</mainClass>
+                      <mainClass>com.papz22.studia4.gui.Studia4Gui</mainClass>
                   </configuration>
               </execution>
           </executions>
