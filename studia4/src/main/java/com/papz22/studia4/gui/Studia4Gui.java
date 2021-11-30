@@ -30,7 +30,7 @@ public class Studia4Gui extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Studia4Gui.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
-
+//TODO Divide project into modules - in other way GUI won't work
     public static void main(String[] args) {
         launch();
     }
