@@ -32,7 +32,7 @@ public class Studia4Controller {
             UniSubject cls;
             while (rs.next()) {
                 cls = new UniSubject();
-                cls.setName(rs.getString(rs.getString("name")));
+                cls.setName(rs.getString("name"));
                 clss.add(cls);
             }
         } catch (SQLException e) {
