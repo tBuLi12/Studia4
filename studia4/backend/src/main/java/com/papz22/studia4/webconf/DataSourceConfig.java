@@ -1,4 +1,4 @@
-package com.papz22.studia4.web;
+package com.papz22.studia4.webconf;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

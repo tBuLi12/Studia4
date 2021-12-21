@@ -1,4 +1,4 @@
-package com.papz22.studia4.web;
+package com.papz22.studia4.webconf;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

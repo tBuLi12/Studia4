@@ -17,6 +17,12 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
   </properties>
+  <modules>
+    <module>gui</module>
+    <module>backend</module>
+  </modules>
+
+  <packaging>pom</packaging>
 
   <dependencies>
     <dependency>
@@ -104,9 +110,9 @@
                   <!-- Default configuration for running -->
                   <!-- Usage: mvn clean javafx:run -->
                   <id>default-cli</id>
-                  <configuration>
+                  <!-- <configuration>
                       <mainClass>com.papz22.studia4.gui.Studia4Gui</mainClass>
-                  </configuration>
+                  </configuration> -->
               </execution>
           </executions>
       </plugin>
