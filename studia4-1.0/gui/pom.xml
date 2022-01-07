@@ -40,6 +40,51 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                  <archive>
+                    <manifest>
+                      <addClasspath>true</addClasspath>
+                      <classpathPrefix>lib/</classpathPrefix>
+                      <mainClass>com.papz22.studia4.gui.Studia4Gui</mainClass>
+                    </manifest>
+                  </archive>
+                </configuration>
+              </plugin>
+              <!-- <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                  <archive>
+                    <manifest>
+                      <mainClass>fully.qualified.MainClass</mainClass>
+                    </manifest>
+                  </archive>
+                  <descriptorRefs>
+                    <mainClass>com.papz22.studia4.gui.Studia4Gui</mainClass>
+                  </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                      <id>make-assembly</id> 
+                      <phase>package</phase> 
+                      <goals>
+                        <goal>single</goal>
+                      </goals>
+                    </execution>
+                  </executions>
+              </plugin> -->
+              <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>com.papz22.studia4.gui/com.papz22.studia4.gui.Studia4Gui</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

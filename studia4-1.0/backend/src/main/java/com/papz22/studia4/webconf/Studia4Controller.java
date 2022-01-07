@@ -60,4 +60,5 @@ public class Studia4Controller {
         }
         return lectures;
     }
+    //TODO form req /login key and pass we check in db 
 }
