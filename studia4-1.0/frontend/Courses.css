@@ -1,0 +1,74 @@
+#courses, #schedule {
+    border-radius: 7px;
+    text-align: center;
+    background-image: linear-gradient(rgb(251, 171, 186), rgb(255, 143, 163) 10px calc(100% - 10px), rgb(230, 130, 149));
+    box-shadow: 0 2px 6px rgb(116, 116, 116), inset 0 2px 4px rgb(238, 210, 216);
+    background-color: rgb(255, 168, 184);
+    padding: 5px 0 5px 0;
+    max-width: 860px;
+    min-width: 500px;
+    width: 70%;
+    display: inline-block;
+}
+
+.course-menu {
+    background-image: linear-gradient(rgb(192, 63, 99), rgb(164, 19, 60) 15% 85%, rgb(112, 12, 41));
+    color: rgb(255, 200, 210);
+    box-shadow: 0 1px 6px rgb(92, 92, 92), inset 0 1px 6px rgb(255, 205, 214);
+    transition: max-height 0.5s;
+    overflow: hidden;
+    border-radius: 2px;
+    background-color: rgb(255, 205, 214);
+}
+
+#courses > div {
+    text-align: left;
+}
+
+.course {
+    position: relative;
+    border-color: rgb(255, 171, 186);
+    border-style: solid;
+    border-width: 0 0 1.5px 0;
+    transition: border-width 0.3s;
+    z-index: 1;
+}
+
+.course::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: linear-gradient(rgb(235, 123, 143), rgb(251, 168, 183));
+    box-shadow: inset 0 1px 5px rgb(114, 114, 114);
+    z-index: -1;
+    transition: opacity 0.2s;
+    opacity: 0;
+}
+
+.course:hover::before {
+    opacity: 1;
+}
+
+#courses > .course > span {
+    display: inline-block;
+    width: 5px;
+}
+
+#courses > .course-menu > span {
+    display: block;
+    padding: 4px 0 4px 30px;
+    transition: color 0.2s;
+    transition: box-shadow 0.5s;
+}
+
+#courses > .course-menu > span:hover {
+    color: rgb(255, 136, 158);
+    box-shadow: inset 0 0 5px rgb(223, 202, 208), 0 0 8px rgb(199, 175, 182);
+}
+
+h2 {
+    margin: 10px;
+}

@@ -1,0 +1,83 @@
+#daylist, .daycolumn {
+    list-style-type: none;
+    padding: 0;
+}
+
+#daylist {
+    display: inline-block;
+    font-size: max(11px, min(1.4vw, 18px));
+}
+
+#daylist > li {
+    float: left;
+}
+
+.class-box {
+    font-size: max(11px, min(1.4vw, 18px));
+    box-sizing: border-box;
+    border-width: 1px;
+    border-color: rgb(255, 205, 214);
+    border-style: solid;
+    display: block;
+    height: 8vw;
+    max-height: 110px;
+    min-height: 58px;
+    width: 10vw;
+    max-width: 140px;
+    min-width: 72px;
+    overflow: hidden;
+}
+
+.hourlegend {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0 20px 0 20px;
+}
+
+.hourlegend > li {
+    font-size: max(8px, min(1.2vw, 15px));
+    text-align: center;
+    display: block;
+    line-height: max(58px, min(8vw, 110px));
+    height: 8vw;
+    max-height: 110px;
+    min-height: 58px;
+}
+
+.lecture, .lab, .exercise {
+    padding-top: 0.8vw;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.lecture {
+    background-image: linear-gradient(rgb(221, 221, 221), rgb(192, 192, 192) 2% 98%, rgb(163, 161, 161));
+    box-shadow: inset 0 0 5px rgb(224, 224, 224), 0 1px 5px rgb(126, 126, 126);
+}
+
+.lab {
+    background-image: linear-gradient(rgb(230, 62, 109), rgb(235, 27, 86) 2% 98%, rgb(201, 24, 74));
+    box-shadow: inset 0 0 4px rgb(185, 185, 185), 0 1px 5px rgb(126, 126, 126);
+}
+
+.exercise {
+    background-image: linear-gradient(rgb(255, 223, 137), rgb(255, 213, 96) 2% 98%, rgb(207, 172, 76));
+    box-shadow: inset 0 0 5px rgb(212, 212, 212), 0 1px 5px rgb(126, 126, 126);
+}
+
+.shrunk-box {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    transition: max-width 0.2s;
+    border-width: 0 1px 0 1px;
+    border-color: rgb(255, 205, 214);
+    border-style: solid;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.highlight {
+    box-shadow: inset 0 0 5px 1px rgb(31, 240, 41)
+}
