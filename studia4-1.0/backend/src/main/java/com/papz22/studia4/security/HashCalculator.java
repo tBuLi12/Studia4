@@ -4,21 +4,32 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+// @Configuration("Security")
 @Component
+@ConfigurationProperties(prefix = "security.data")
 public class HashCalculator {
-    private String algorithm;
+    // @Value("${security.data.algorithm}")
+    private String algorithm = "SHA3-512";
+    // @Autowired
     private MessageDigest digest;
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
 
-    public HashCalculator()
-    {}
-
-    public HashCalculator(String algorithm) throws NoSuchAlgorithmException
+    public HashCalculator() throws NoSuchAlgorithmException
     {
         digest = MessageDigest.getInstance(algorithm);
-    };
+    }
+
+    // public HashCalculator(String algorithm) throws NoSuchAlgorithmException
+    // {
+    //     digest = MessageDigest.getInstance(algorithm);
+    // };
 
     public void setAlgorithm(String algorithm) throws NoSuchAlgorithmException
     {
@@ -42,7 +53,7 @@ public class HashCalculator {
         }
     return new String(hexChars, StandardCharsets.UTF_8);
     }
-
+    // @Bean
     public String encode(String text)
     {
         byte[] hashbytes = digest.digest(text.getBytes(StandardCharsets.UTF_8));

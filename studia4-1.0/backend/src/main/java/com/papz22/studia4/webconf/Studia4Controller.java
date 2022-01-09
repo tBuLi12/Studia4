@@ -60,5 +60,10 @@ public class Studia4Controller {
         }
         return lectures;
     }
+    @GetMapping("/login")
+    String test_login()
+    {
+        return "Hello Admin";
+    }
     //TODO form req /login key and pass we check in db 
 }

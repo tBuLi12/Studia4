@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 @Configuration
 public class DataSourceConfig {
     private static HikariConfig config = new HikariConfig();
@@ -30,4 +32,9 @@ public class DataSourceConfig {
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }
+    @Bean
+    public DataSource dataSource() throws SQLException {
+        return ds;
+    }
 }
+//TODO have to rewrite to return DATASOURCE
