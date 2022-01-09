@@ -1,0 +1,47 @@
+nav {
+    background-image: linear-gradient(rgb(246, 62, 95), rgb(187, 57, 81));
+    background-color: rgb(214, 91, 114);
+    box-shadow: 0 1px 5px rgb(124, 123, 123);
+}
+
+nav span {
+    position: relative;
+    background-image: linear-gradient(rgb(246, 62, 95), rgb(187, 57, 81));
+    padding: 3px 6px 5px 6px;
+    border-color: rgb(255, 86, 117);
+    border-style: solid;
+    border-width: 0 1.5px 0 0;
+    z-index: 1;
+}
+
+nav > span {
+    display: inline-block;
+}
+
+nav span::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: linear-gradient(rgb(216, 43, 75), rgb(243, 101, 127));
+    box-shadow: inset 0 1px 3px rgb(88, 88, 88);
+    z-index: -1;
+    transition: opacity 0.3s;
+    opacity: 0;
+}
+
+nav span:hover::before {
+    opacity: 1;    
+}
+
+nav > div {
+    top: 49px;
+    position: absolute;
+    z-index: 10;
+}
+
+nav > div > span {
+    display: block;
+}
