@@ -1,68 +1,61 @@
 package com.papz22.studia4.security;
 
+import java.sql.SQLException;
+
 import com.papz22.studia4.webconf.DataSourceConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
 public class Studia4WebConfigurerAdapter extends WebSecurityConfigurerAdapter
 {
-    // private Studia4WebConfigurerAdapter authenticationEntryPoint;
+    @Autowired
+    private UnauthenticatedRequestHandler authenticationEntryPoint;
     @Autowired
     private HashCalculator encoder;
     @Autowired
     private DataSourceConfig datasource;
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // auth.inMemoryAuthentication()
-        //   .withUser("user1").password(encoder.encode("user1Pass"))
-        //   .authorities("ROLE_USER");
-          auth.jdbcAuthentication()
-      .dataSource(datasource.dataSource())
-    //   .withDefaultSchema()
-    .usersByUsernameQuery("select username,hash"
-    + "from passwd"
-    + "where username = ?")
-      .authoritiesByUsernameQuery("select username,security_group "
-        + "from passwd "
-        + "where username = ?")
-      .withUser("admin")
-      .password(encoder.encode("admin"))
-      .roles("ADMIN");
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.userDetailsService(jdbcUserDetailsManager()).passwordEncoder(encoder); 
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-          .antMatchers("/login").permitAll()
+      //if we want csrf csrf token will be needed
+        http.csrf().disable().authorizeRequests()
+          .antMatchers("/index*", "/static/**", "/*.js", "/*.json", "/*.ico").permitAll()
           .anyRequest().authenticated()
           .and()
-          .httpBasic();
-        //   .authenticationEntryPoint(authenticationEntryPoint);
+          .formLogin()
+              .loginPage("/login") // here you will be redirected when trying to access
+              .loginProcessingUrl("/login/1") // POST to this URL if you want to authenticate
+              .permitAll()
+              .and()
+          .logout()
+              .permitAll()
+              .and()
+              .httpBasic()
+              .authenticationEntryPoint(authenticationEntryPoint);
+
 
     }
-    // @Bean
-    // public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-    //     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    //     executor.setCorePoolSize(10);
-    //     executor.setMaxPoolSize(100);
-    //     executor.setQueueCapacity(50);
-    //     executor.setThreadNamePrefix("async-");
-    //     return executor;
-    // }
-
-    // @Bean
-    // public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(ThreadPoolTaskExecutor delegate) {
-    //     return new DelegatingSecurityContextAsyncTaskExecutor(delegate);
-    // }
+    @Bean
+    public JdbcUserDetailsManager jdbcUserDetailsManager() throws SQLException
+    {
+      JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager();
+      jdbcUserDetailsManager.setDataSource(datasource.dataSource());
+      
+      return jdbcUserDetailsManager;
+    }
+  
 }

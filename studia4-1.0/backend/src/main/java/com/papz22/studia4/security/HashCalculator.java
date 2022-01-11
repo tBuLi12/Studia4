@@ -4,20 +4,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-// @Configuration("Security")
 @Component
 @ConfigurationProperties(prefix = "security.data")
-public class HashCalculator {
-    // @Value("${security.data.algorithm}")
+public class HashCalculator implements PasswordEncoder{
+
     private String algorithm = "SHA3-512";
-    // @Autowired
     private MessageDigest digest;
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
 
@@ -25,11 +20,6 @@ public class HashCalculator {
     {
         digest = MessageDigest.getInstance(algorithm);
     }
-
-    // public HashCalculator(String algorithm) throws NoSuchAlgorithmException
-    // {
-    //     digest = MessageDigest.getInstance(algorithm);
-    // };
 
     public void setAlgorithm(String algorithm) throws NoSuchAlgorithmException
     {
@@ -53,10 +43,24 @@ public class HashCalculator {
         }
     return new String(hexChars, StandardCharsets.UTF_8);
     }
-    // @Bean
-    public String encode(String text)
+    @Override
+    public String encode(CharSequence text)
     {
-        byte[] hashbytes = digest.digest(text.getBytes(StandardCharsets.UTF_8));
-        return bytesToHex(hashbytes);
+        // String text2 = "admin";
+        // System.out.println("entered encoder");
+        // System.out.println(text.toString());
+        byte[] hashbytes = digest.digest(text.toString().getBytes(StandardCharsets.UTF_8));
+        String result = bytesToHex(hashbytes); 
+        // System.out.println(result);
+        return result;
+    }
+    @Override
+    public boolean matches(CharSequence plainTextPassword, String passwordInDatabase)
+    {
+        System.out.println("matches entered");
+        // System.out.println(encode(plainTextPassword));
+        // System.out.println(passwordInDatabase);
+        System.out.println(encode(plainTextPassword).matches(passwordInDatabase));
+        return encode(plainTextPassword).matches(passwordInDatabase);
     }
 }
