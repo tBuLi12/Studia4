@@ -1,12 +1,16 @@
-package com.papz22.studia4.web;
+package com.papz22.studia4.webconf;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
-
-public class DataSource {
+@Configuration
+public class DataSourceConfig {
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
     private static String url = "jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl";
@@ -21,8 +25,8 @@ public class DataSource {
         ds = new HikariDataSource( config );
     }
 
-    private DataSource() {}
-
+    public DataSourceConfig() {}
+    @Bean
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }

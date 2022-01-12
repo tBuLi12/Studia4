@@ -1,4 +1,4 @@
-package com.papz22.studia4.web;
+package com.papz22.studia4.repository;
 
 import java.sql.Date;
 
