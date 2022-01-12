@@ -1,8 +1,7 @@
 import React from "react";
 import { NavLink } from "./Nav";
-import { UserContext } from "./App";
 import './Courses.css';
-import { fetchAndSetCourses } from "./Remote";
+import { fetchCourses, useRemoteData } from "./Remote";
 
 function getCourseText(name) {
     return `blablabla info o ${name}`;
@@ -34,14 +33,12 @@ function MaitainerInfo(props) {
 }
 
 function CoursesList() {
-    const user = React.useContext(UserContext);
-    const [courses, setCourses] = React.useState(null);
+    const courses = useRemoteData(fetchCourses);
     if (courses === null) {
-        fetchAndSetCourses(user, setCourses);
         return <div>Loading content...</div>;
     }
     return (
-        <div id="courses">
+        <div id="courses" className="content-box">
             Moje Przedmioty
             {courses.map(crs => <Course key={crs.id} name={crs.name}/>)}
         </div>
@@ -54,7 +51,7 @@ function Course(props) {
         <>
             <div className="course" onClick={function() {
                 setExpanded(prev => !prev);
-            }}><span></span>{props.name}</div>
+            }}>{props.name}</div>
             <div className="course-menu" style={{maxHeight: expanded ? "98px" : "0px"}}>
                 <NavLink view={<CourseInfo name={props.name}/>}>Strona przedmiotu</NavLink>
                 <NavLink view={<MaitainerInfo name={props.maitainerName}/>}>Strona prowadzącego</NavLink>

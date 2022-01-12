@@ -4,7 +4,6 @@ import "./Login.css"
 
 export default function LogIn() {
     const dispatch = React.useContext(DispatchContext);
-    const ref = React.useRef();
     const [nameVal, setName] = React.useState("");
     function onChange(event) {
         setName(event.target.value);
@@ -14,7 +13,7 @@ export default function LogIn() {
         event.preventDefault();
     }
     return (
-        <form onSubmit={onSubmit} ref={ref}>
+        <form onSubmit={onSubmit}>
             <input type="text" name="name" value={nameVal} onChange={onChange} required placeholder="Login"/><br/>
             <Button submit>Log in</Button>
         </form>

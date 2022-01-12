@@ -1,8 +1,10 @@
 import React from 'react';
 import './Schedule.css';
 import { Button, UserContext } from "./App";
-import { fetchAndSetClasses, pushRescheduleRequest, pushRatings, fetchAndSetRatings } from "./Remote";
- 
+import { fetchClasses, pushRescheduleRequest, pushRatings, fetchRatings } from "./Remote";
+const hours = ["8:15", "10:15", "12:15", "14:15", "16:15", "18:15"];
+const days = ["poniedzialek", "wtorek", "sroda", "czwartek", "piatek"];
+
 function useMousePos(inital) {
     const [pos, setPos] = React.useState(inital);
     React.useEffect(function() {
@@ -20,93 +22,100 @@ function useMousePos(inital) {
 
 function schedStateReducer(state, { action, data }) {
     switch (action) {
-        case "reschedule":
-            const newSched = JSON.parse(JSON.stringify(state.schedule));
-            (newSched[data.to] ?? (newSched[data.to] = [])).push(newSched[data.from].splice(data.i, 1)[0]);
-            if (newSched[data.from].length === 0) {
-                delete newSched[data.from];
-            }
-            return {...state, schedule: newSched};
         case "drag":
             return {...state, dragged: data};
         case "endDrag":
-            return {...state, dragged: null};
+            const { x, y, id } = data;
+            let newSched = null;
+            for (const [slot, clb] of Object.entries(state.dropSlots.current)) {
+                if (clb(x, y)) {
+                    newSched = JSON.parse(JSON.stringify(state.schedule));
+                    newSched[id].resched = slot;
+                    if (newSched[id].slot === slot) {
+                        delete newSched[id].resched;
+                    }
+                    break;
+                }
+            }
+            return {...state, dragged: null, schedule: newSched ?? state.schedule};
+        case "toggleSelect":
+            return {...state, selections: {...state.selections, [data]: !state.selections[data]}};
+        case "rerate":
+            return {...state, ratings: {...state.ratings, [data.slot]: data.rating}};
+        case "setSchedule":
+            return {...state, schedule: data};
+        case "setSelections":
+            return {...state, selections: data};
+        case "setRatings":
+            return {...state, ratings: data};
         default:
             return state;
     }
 }
 
-function Schedule({ initSchedule, initRatings, toSelect, selectSingle, permResched, mode, actions }) {
-    const dropSlots = React.useRef({});
-    const changes = React.useRef({});
-    const draggedFromSlot = React.useRef(null);
-    const ratings = React.useRef(initRatings);
-    const selectedSlots = React.useRef(new Set());
-    const [{ schedule, dragged }, dispatchToReducer] = React.useReducer(schedStateReducer, {
-        schedule: initSchedule,
-        dragged: null,
-    });
-
-    const dispatch = React.useCallback(function({ action, data }) {
-        switch(action) {
-            case "drag":
-                draggedFromSlot.current = {slot: data.slot, i: data.i};
-                dispatchToReducer({action, data});
-                break;
-            case "endDrag":
-                // const x = data.x + window.scrollX;
-                // const y = data.y + window.scrollY;
-                const { x, y, id } = data;
-                for (const [slot, clb] of Object.entries(dropSlots.current)) {
-                    if (clb(x, y)) {
-                        changes.current[id] = slot;
-                        initSchedule[slot]?.forEach(cls => cls.id === id && (delete changes.current[id]));
-                        dispatchToReducer({
-                            action: "reschedule",
-                            data: {
-                                from: draggedFromSlot.current.slot,
-                                i: draggedFromSlot.current.i,
-                                to: slot
-                            }
-                        })
-                        break;
-                    }
-                }
-                dispatchToReducer({action});
-                break;
-            case "toggleSelect":
-                selectedSlots.current.delete(data) || selectedSlots.current.add(data);
-                break;
-            case "rerate":
-                ratings.current[data.slot] = data.rating;
-                break;
-            default:
-                dispatchToReducer({action, data});
+function transformSchedule(schedule, perm, disId) {
+    if (schedule === undefined) {
+        return {};
+    }
+    const sbs = {};
+    for (const [id, cls] of Object.entries(schedule)) {
+        if (perm) {
+            id != disId && (sbs[cls.resched ?? cls.slot] ?? (sbs[cls.resched ?? cls.slot] = [])).push(cls);
+        } else {
+            (sbs[cls.slot] ?? (sbs[cls.slot] = [])).push(cls);
+            if (cls.resched) {
+                (sbs[cls.resched] ?? (sbs[cls.resched] = [])).push({...cls, pend: true});
+            }
         }
-    }, [])
+    }
+    return sbs;
+}
 
-    const fwd = {mode, dispatch, dropSlots};
-    const hours = ["8:15", "10:15", "12:15", "14:15", "16:15", "18:15"];
-    const days = ["poniedzialek", "wtorek", "sroda", "czwartek", "piatek"];
-    const cbData = {
-        "reschedule": changes.current,
-        "select": selectedSlots.current,
-        "rate": ratings.current
+function reduceSelections(selections) {
+    const sel = new Set();
+    for (const [slot, selected] of Object.entries(selections)) {
+        selected && sel.add(slot);
+    }
+    return sel;
+}
+
+function scheduleDiff(inital, current) {
+    const changes = {};
+    for (const [id, cls] of Object.entries(current)) {
+        if ((cls.resched ?? cls.slot) !== (inital[id].resched ?? inital[id].slot)) {
+            changes[id] = cls.resched ?? cls.slot;
+        }
+    }
+    return changes;
+}
+
+export function Schedule({ initSchedule, initRatings, initSelections, onSelect, mode, actions, permResched }) {
+    const dropSlots = React.useRef({});
+    const borderRef = React.useRef();
+    const [{ schedule, selections, ratings, dragged }, dispatch] = React.useReducer(schedStateReducer, {
+        schedule: initSchedule,
+        selections: initSelections,
+        ratings: initRatings,
+        dragged: null,
+        dropSlots
+    });
+    React.useEffect(() => dispatch({action: "setSchedule", data: initSchedule}), [initSchedule]);
+    React.useEffect(() => dispatch({action: "setSelections", data: initSelections}), [initSelections]);
+    React.useEffect(() => dispatch({action: "setRatings", data: initRatings}), [initRatings]);
+    const schedBySlot = React.useMemo(() => transformSchedule(schedule, permResched, dragged?.disId), [schedule, permResched, dragged]);
+
+    const fwd = {mode, dispatch, dropSlots, onSelect, borderRef};
+
+    const getCbData = {
+        reschedule: () => scheduleDiff(initSchedule, schedule),
+        select: () => reduceSelections(selections),
+        rate: () => ratings
     }[mode];
 
-    // React.useEffect(function() {
-    //     fetchAndSetClasses(user, sched => dispatch({action: "setSchedule", data: sched}));
-    // }, [user, dispatch]);
-
-    // React.useEffect(function() {
-    //     if (mode === "rate") {
-    //         fetchAndSetRatings(user, rts => dispatch({action: "setRatings", data: rts}));
-    //     }
-    // }, [user, dispatch, mode]);
     return (
-        <div id="schedule">
+        <div id="schedule" className="content-box">
             Plan zajęć
-            <div id="scheduleborder">
+            <div id="scheduleborder" ref={borderRef}>
                 <ul id="daylist">
                     <li><HourLegend/></li>
                     {days.map(function(day) {
@@ -117,12 +126,10 @@ function Schedule({ initSchedule, initRatings, toSelect, selectSingle, permResch
                                     <ClassBox
                                         key={day+hour} 
                                         slot={day+hour} 
-                                        cls={schedule[day+hour]}
-                                        actionData={{
-                                            "reschedule": dragged?.drops.includes(day+hour),
-                                            "select": toSelect?.has(day+hour),
-                                            "rate": initRatings?.[day+hour] 
-                                        }[mode]}
+                                        cls={schedBySlot[day+hour]}
+                                        selected={selections?.[day+hour]}
+                                        rating={ratings?.[day+hour]}
+                                        droppable={permResched ? "all" : dragged?.drops.includes(day+hour)}
                                         {...fwd}
                                     />
                                 ))}
@@ -133,7 +140,7 @@ function Schedule({ initSchedule, initRatings, toSelect, selectSingle, permResch
                 </ul>
             </div>
             {dragged?.elem}
-            {actions.map((act, i) => <Button key={i} onClick={() => act.cb(cbData)}>{act.name}</Button>)}
+            {actions?.map((act, i) => <Button key={i} onClick={() => act.cb(getCbData())}>{act.name}</Button>)}
         </div>
     );
 }
@@ -143,8 +150,8 @@ function ScheduleView() {
     const [schedule, setSchedule] = React.useState(null);
     const [ratings, setRatings] = React.useState(null);
     const [mode, setMode] = React.useState("view");
-    React.useEffect(() => schedule === null && fetchAndSetClasses(user, setSchedule), [user]);
-    React.useEffect(() => mode === "rate" && ratings === null && fetchAndSetRatings(user, setRatings), [user, mode]);
+    React.useEffect(() => fetchClasses(user).then(setSchedule), [user]);
+    React.useEffect(() => mode === "rate" && fetchRatings(user).then(setRatings), [user, mode]);
     if (schedule === null || (mode === "rate" && ratings === null)) {
         return <div>Loading content...</div>;
     }
@@ -154,16 +161,16 @@ function ScheduleView() {
         actions.push({
             name: "Zaporoponuj zmiany",
             cb: function(chng) {
-                pushRescheduleRequest(user, chng);
-                setMode("view");
+                setSchedule(null);
+                pushRescheduleRequest(chng).then(() => fetchClasses().then(setSchedule));
             }
         });
     } else if (mode === "rate") {
         actions.push({
             name: "Zapisz",
             cb: function(rtings) {
-                pushRatings(user, rtings);
-                setMode("view");
+                setRatings(null);
+                pushRatings(rtings).then(() => fetchRatings().then(setRatings).then(() => setMode("view")));
             }
         });
         schedProps.initRatings = ratings;
@@ -189,34 +196,33 @@ function HourLegend() {
     );
 }
 
-function ClassBox({ cls, slot, mode, dispatch, dropSlots, actionData }) {
+function ClassBox({ cls, slot, mode, dispatch, dropSlots, selected, onSelect, rating, droppable, borderRef }) {
     const ref = React.useRef();
-    const [selected, setSelected] = React.useState(false);
-    const fwd = {slot, mode, dispatch};
+    const fwd = {mode, dispatch, rating, borderRef};
     React.useEffect(function() {
-        if (mode === "reschedule" && actionData) {
+        if (droppable) {
             dropSlots.current[slot] = function(x, y) {
                 const rect = ref.current.getBoundingClientRect();
                 return (y > rect.top && y < rect.bottom && x > rect.left && x < rect.right);
             }
             return () => delete dropSlots.current[slot];
         }
-    }, [slot, dropSlots, mode, actionData]);
+    }, [slot, dropSlots, droppable]);
     let cont = null;
     if (cls !== undefined && cls.length !== 0) {
-        cont = cls.length === 1 ? <Class {...fwd} i={0} cls={cls[0]}/> : <Collision {...fwd} cls={cls}/>;
+        cont = cls.length === 1 ? <Class {...fwd} cls={cls[0]}/> : <Collision {...fwd} cls={cls}/>;
     }
     const handlers = {};
-    if (mode === "select" && actionData) {
+    if (mode === "select" && selected !== undefined) {
         handlers.onClick = function() {
             dispatch({action: "toggleSelect", data: slot});
-            setSelected(sel => !sel);
+            onSelect?.(slot);
         }
     }
-    if (mode === "rate" && actionData !== undefined) {
-        cont = <>{cont}<Rater initRating={actionData} {...fwd}/></>
+    if (rating !== undefined) {
+        cont = <>{cont}<Rater {...fwd} slot={slot}/></>;
     }
-    return <li className={"class-box" + ((mode === "reschedule" && actionData) || selected ? " highlight" : "")} {...handlers} ref={ref}>{cont}</li>;
+    return <li className={"class-box" + (droppable === true || selected ? " highlight" : "")} {...handlers} ref={ref}>{cont}</li>;
 }
 
 function Class(props) {
@@ -256,23 +262,27 @@ function Class(props) {
                 y: rect.y + window.scrollY - event.pageY
             }
             props.dispatch?.({action: "drag", data: {
-                elem: <DraggedClass cls={props.cls} initPos={{x: event.pageX, y: event.pageY}} offset={offset} dispatch={props.dispatch}/>,
-                slot: props.slot,
-                i: props.i,
+                elem: <DraggedClass cls={props.cls} initPos={{x: event.pageX, y: event.pageY}} offset={offset} dispatch={props.dispatch} borderRef={props.borderRef}/>,
                 drops: props.cls.alts,
+                disId: props.cls.id
             }});
         }
     }
-    return (<div className={props.cls.type} {...handlers}>{text}</div>);
+    const style = props.cls.pend ? {opacity: 0.5} : {};
+    return (<div className={props.cls.type} {...handlers} style={style}>{text}</div>);
 }
 
-function DraggedClass({ initPos, cls, offset: {x: ox, y: oy}, dispatch }) {
+function DraggedClass({ initPos, cls, offset: {x: ox, y: oy}, dispatch, borderRef }) {
     const ref = React.useRef();
     const { x, y } = useMousePos(initPos);
+    const { width, height } = ref.current?.getBoundingClientRect() ?? {width: 0, height: 0};
+    const { top: borderTop, left: borderLeft, bottom: borderBottom, right: borderRight } = borderRef.current.getBoundingClientRect();
+    const leftPos = Math.min(Math.max(x + ox, borderLeft + window.scrollX), borderRight + window.scrollX - width);
+    const topPos = Math.min(Math.max(y + oy, borderTop + window.scrollY), borderBottom + window.scrollY - height);
     return (<div className="class-box" style={{
         position: "absolute",
-        left: x + ox,
-        top: y + oy
+        left: leftPos,
+        top: topPos
     }} ref={ref} onMouseUp={function() {
         const {top, bottom, left, right} = ref.current.getBoundingClientRect();
         dispatch({action: "endDrag", data: {y: (top + bottom) / 2, x: (left + right) / 2, id: cls.id}})
@@ -281,7 +291,7 @@ function DraggedClass({ initPos, cls, offset: {x: ox, y: oy}, dispatch }) {
     </div>);
 }
 
-function Collision({ cls: clss, slot, mode, dispatch }) {
+function Collision({ cls: clss, mode, dispatch, borderRef }) {
     const eqWidth = 100/clss.length;
     const fWidth = 65;
     const ufWidth = 35/(clss.length - 1);
@@ -290,7 +300,7 @@ function Collision({ cls: clss, slot, mode, dispatch }) {
         <div onMouseLeave={() => setFocused(null)} style={{height: "100%"}}>
             {clss.map(function(cls, i) {
                 const width = focused === null ? eqWidth : (i === focused ? fWidth : ufWidth);
-                const fwd = {cls, i, width, mode, dispatch, slot};
+                const fwd = {cls, width, mode, dispatch, borderRef};
                 return (
                     <div key={i} className="shrunk-box" onMouseEnter={() => setFocused(i)} style={{maxWidth: `${width}%`}}>
                         <Class {...fwd}/>
@@ -301,16 +311,32 @@ function Collision({ cls: clss, slot, mode, dispatch }) {
     );
 }
 
-function Rater({ initRating, dispatch, slot }) {
-    const [rating, setRating] = React.useState(initRating);
-    React.useEffect(() => dispatch({action: "rerate", data: {slot, rating}}));
-    return (
-        <div className='rater'>
-            <Button onClick={() => setRating(prev => prev - 1)}>-</Button>
-            {rating}
-            <Button onClick={() => setRating(prev => prev + 1)}>+</Button>
-        </div>
-    );
+function Rater({ dispatch, slot, rating, mode }) {
+    let cont = rating;
+    mode === "rate" && (cont = (
+        <>
+            <Button onClick={() => dispatch({action: "rerate", data: {slot, rating: rating - 1}})}>-</Button>
+            {cont}
+            <Button onClick={() => dispatch({action: "rerate", data: {slot, rating: rating + 1}})}>+</Button>
+        </>
+    ));
+    return <div className='rater'>{cont}</div>;
 }
+
+export function expandSelection(sel) {
+    const fullSel = {};
+    days.forEach(day => hours.forEach(hour => {fullSel[day+hour] = false}));
+    return {...fullSel, ...sel};
+}
+
+// export function PopupSchedule({ schedProps, onClose, topRender}) {
+//     return (
+//         <div className="pop-up">
+//             {topRender}
+//             <div><Button onClick={onClose}>X</Button></div>
+//             <Schedule {...schedProps}/>
+//         </div>
+//     );
+// }
 
 export default ScheduleView;

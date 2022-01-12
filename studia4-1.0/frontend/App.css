@@ -65,3 +65,40 @@ body {
     padding: 0.23vw 0.4vw;
 }
 
+.search-bar {
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid gray;
+}
+
+.suggestion {
+    background-color: aliceblue;
+    border-top: 1px solid gray;
+}
+
+.suggestion:hover, .focused-sugg {
+    background-color: rgb(255, 137, 158);
+}
+
+.pop-up {
+    position: fixed;
+    box-sizing: border-box;
+    top: 10vh;
+    bottom: 10vh;
+    left: 0;
+    width: 100vw;
+    max-height: 80vh;
+    background-color: rgb(230, 62, 109);
+    padding: 10px;
+    z-index: 10;
+    overflow-y: auto;
+}

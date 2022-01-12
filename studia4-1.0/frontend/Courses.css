@@ -1,4 +1,4 @@
-#courses, #schedule {
+.content-box {
     border-radius: 7px;
     text-align: center;
     background-image: linear-gradient(rgb(251, 171, 186), rgb(255, 143, 163) 10px calc(100% - 10px), rgb(230, 130, 149));
@@ -21,12 +21,10 @@
     background-color: rgb(255, 205, 214);
 }
 
-#courses > div {
-    text-align: left;
-}
-
-.course {
+.course, .box-row {
     position: relative;
+    text-align: left;
+    padding-left: 5px;
     border-color: rgb(255, 171, 186);
     border-style: solid;
     border-width: 0 0 1.5px 0;
@@ -50,11 +48,6 @@
 
 .course:hover::before {
     opacity: 1;
-}
-
-#courses > .course > span {
-    display: inline-block;
-    width: 5px;
 }
 
 #courses > .course-menu > span {

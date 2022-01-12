@@ -1,4 +1,4 @@
-form > input[type="text"] {
+form input[type="text"] {
     font-size: 20px;
     height: 33px;
     background-color: rgb(255, 240, 243);
@@ -8,7 +8,7 @@ form > input[type="text"] {
     border-radius: 4px;
 }
 
-form > input[type="text"]:focus {
+form input[type="text"]:focus {
     outline-width: 2px;
     outline-color: rgb(201, 24, 74);
     outline-style: solid;
