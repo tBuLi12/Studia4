@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.event.ChangeEvent;
-
 import com.papz22.studia4.repository.Alternative;
 import com.papz22.studia4.repository.ChangeRequest;
 import com.papz22.studia4.repository.Classes;
