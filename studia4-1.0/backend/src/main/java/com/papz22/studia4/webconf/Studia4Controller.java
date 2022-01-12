@@ -65,7 +65,7 @@ public class Studia4Controller {
                 lecture.setClass_type(rs.getString("class_type"));
                 lecture.setRoomNumber(rs.getString("room_nr"));
                 lecture.setWeek_day(rs.getString("week_day"));
-                lecture.setTimeSlot(rs.getString("time_slot"));
+                lecture.setTimeSlotID(rs.getInt("time_slot_id"));
                 lectures.add(lecture);
             }
             rs.close();
@@ -94,7 +94,7 @@ public class Studia4Controller {
                 rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-            } 
+            }
         } catch(InvalidGetParameterException e) {
             e.printStackTrace();
         }
@@ -150,7 +150,7 @@ public class Studia4Controller {
                 req.setName(rs.getString("name"));
                 req.setStudent(rs.getString("student"));
                 req.setWeekDay(rs.getString("week_day"));
-                req.setTimeSlot(rs.getString("time_slot"));
+                req.setTimeSlotID(rs.getInt("time_slot_id"));
                 requests.add(req);
             }
             rs.close();

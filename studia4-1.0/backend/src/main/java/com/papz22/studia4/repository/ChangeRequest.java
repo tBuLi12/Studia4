@@ -6,7 +6,7 @@ public class ChangeRequest {
     private String classType;
     private String student;
     private String weekDay;
-    private String timeSlot;
+    private int timeSlotID;
 
 
     public ChangeRequest() {
@@ -52,12 +52,12 @@ public class ChangeRequest {
         this.weekDay = weekDay;
     }
 
-    public String getTimeSlot() {
-        return this.timeSlot;
+    public int getTimeSlotID() {
+        return this.timeSlotID;
     }
 
-    public void setTimeSlot(String timeSlot) {
-        this.timeSlot = timeSlot;
+    public void setTimeSlotID(int timeSlot) {
+        this.timeSlotID = timeSlot;
     }
 
 

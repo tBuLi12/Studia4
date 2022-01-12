@@ -1,6 +1,6 @@
 package com.papz22.studia4.repository;
 
-public class Classes 
+public class Classes
 {
     private int id;
     private String name;
@@ -15,30 +15,16 @@ public class Classes
     private int number_of_places;
     private String class_type;
     private String roomNumber;
-    private String timeSlot;
+    private int timeSlotID;
 
     public Classes(){}
 
-    public Classes(int id, int subject_id, int classroom_id, String week_day, int week_day_number, String starting_time, int student_group, int group_capacity, String teacher_id, int number_of_places) 
-    {
-        this.id = id;
-        this.subject_id = subject_id;
-        this.classroom_id = classroom_id;
-        this.week_day = week_day;
-        this.week_day_number = week_day_number;
-        this.starting_time = starting_time;
-        this.student_group = student_group;
-        this.group_capacity = group_capacity;
-        this.teacher_id = teacher_id;
-        this.number_of_places = number_of_places;
+    public int getTimeSlotID() {
+        return this.timeSlotID;
     }
 
-    public String getTimeSlot() {
-        return this.timeSlot;
-    }
-
-    public void setTimeSlot(String timeSlot) {
-        this.timeSlot = timeSlot;
+    public void setTimeSlotID(int timeSlot) {
+        this.timeSlotID = timeSlot;
     }
 
     public String getRoomNumber() {
