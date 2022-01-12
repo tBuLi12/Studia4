@@ -95,12 +95,4 @@ public class Worker {
     public void setConsultation(int consultation) {
         this.consultation = consultation;
     }
-
-
-    //TODO FIX date conversion error
-    @Override
-    public String toString() {
-        return String.format("Employee [pesel=%d, name=%s, surname=%s, birth_date=%d, status=%s, institution_id=%d, salary=%d, website=%d, date_employed=%d, consultation=%d]",
-        pesel, name, surname, birth_date, status, institution_id, salary, website, date_employed, consultation);
-    }
 }

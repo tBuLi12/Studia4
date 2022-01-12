@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 @Configuration
 public class DataSourceConfig {
     private static HikariConfig config = new HikariConfig();
@@ -22,6 +24,7 @@ public class DataSourceConfig {
         config.addDataSourceProperty( "cachePrepStmts" , "true" );
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        // config.setAutoCommit(false);
         ds = new HikariDataSource( config );
     }
 
@@ -29,5 +32,9 @@ public class DataSourceConfig {
     @Bean
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
+    }
+    @Bean
+    public DataSource dataSource() throws SQLException {
+        return ds;
     }
 }
