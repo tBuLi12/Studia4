@@ -38,7 +38,9 @@ public class Studia4WebConfigurerAdapter extends WebSecurityConfigurerAdapter
           .and()
           .formLogin()
               .loginPage("/login") // here you will be redirected when trying to access
-              .loginProcessingUrl("/login/1") // POST to this URL if you want to authenticate
+              // .loginProcessingUrl("/login/1") // POST to this URL if you want to authenticate
+              .defaultSuccessUrl("/index.html")
+              .successHandler(successHandler())
               .permitAll()
               .and()
           .logout()
@@ -56,6 +58,12 @@ public class Studia4WebConfigurerAdapter extends WebSecurityConfigurerAdapter
       jdbcUserDetailsManager.setDataSource(datasource.dataSource());
       
       return jdbcUserDetailsManager;
+    }
+
+    @Bean
+    public Studia4AuthenticationSuccessHandler successHandler()
+    {
+      return new Studia4AuthenticationSuccessHandler();
     }
   
 }

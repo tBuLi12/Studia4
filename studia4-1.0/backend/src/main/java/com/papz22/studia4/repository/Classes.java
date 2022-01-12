@@ -13,6 +13,9 @@ public class Classes
     private int group_capacity;
     private String teacher_id;
     private int number_of_places;
+    private String class_type;
+    private String roomNumber;
+    private String timeSlot;
 
     public Classes(){}
 
@@ -28,6 +31,30 @@ public class Classes
         this.group_capacity = group_capacity;
         this.teacher_id = teacher_id;
         this.number_of_places = number_of_places;
+    }
+
+    public String getTimeSlot() {
+        return this.timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    public String getRoomNumber() {
+        return this.roomNumber;
+    }
+
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public String getClass_type() {
+        return this.class_type;
+    }
+
+    public void setClass_type(String class_type) {
+        this.class_type = class_type;
     }
 
     public int getId() {

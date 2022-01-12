@@ -24,6 +24,7 @@ public class DataSourceConfig {
         config.addDataSourceProperty( "cachePrepStmts" , "true" );
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        // config.setAutoCommit(false);
         ds = new HikariDataSource( config );
     }
 
@@ -37,4 +38,3 @@ public class DataSourceConfig {
         return ds;
     }
 }
-//TODO have to rewrite to return DATASOURCE

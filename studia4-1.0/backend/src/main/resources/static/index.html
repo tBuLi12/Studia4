@@ -1,33 +1,21 @@
-<!-- <head>
-</head>
-<body>
-    <form method="POST" action="/login">
-        <input type="text" name="username"/>
-        <input type="text" name="password"/>
-        <input type="submit"/>
-    </form>
-</body> -->
 <head>
     <script>
         const urlStr = "http://" + document.location.host + "/login";
         const url = new URL(urlStr);
+        const lgUrl = new URL("http://" + document.location.host + "/logged");
         data = new FormData();
-        data.append("username", "manager");
+        data.append("username", "student");
         data.append("password", "admin");
         fetch(url, {
             method: 'POST',
             body: data
-        }).then(res => res.text()).then(txt => alert(`Response: ${txt}, url: ${urlStr}`));
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: "manager",
-                password: "admin"
-            }),
-        }).then(res => res.text()).then(txt => alert(`Response: ${txt}, url: ${urlStr}`));
+        }).then(res => res.text())
+            .then(txt => alert(`Response: ${txt}, url: ${urlStr}`))
+            .then(() => fetch(lgUrl))
+            // .then(res => res.text())
+            // .then(txt => alert(txt));
+            .then(res => res.json())
+            .then(({ username, security, position }) => alert(`Username: ${username}, sec: ${security}, pos: ${position}`));
     </script>
 </head>
 <body>
