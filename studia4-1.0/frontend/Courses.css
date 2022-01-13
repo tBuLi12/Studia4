@@ -1,0 +1,75 @@
+.content-box {
+    border-radius: 0.5em;
+    text-align: center;
+    width: 22em;
+    background-image: linear-gradient(rgb(253, 184, 197), rgb(255, 143, 163) 0.1em calc(100% - 0.1em), rgb(218, 123, 140));
+    box-shadow: 0 0.15em 0.5em rgb(116, 116, 116), inset 0 0.15em 0.3em rgb(238, 210, 216);
+    background-color: rgb(255, 168, 184);
+    padding: 0.2em 0 0.4em 0;
+    display: inline-block;
+}
+
+.course-menu {
+    background-image: linear-gradient(rgb(192, 63, 99), rgb(164, 19, 60) 15% 85%, rgb(112, 12, 41));
+    color: rgb(255, 200, 210);
+    box-shadow: 0 1px 6px rgb(92, 92, 92), inset 0 1px 6px rgb(255, 205, 214);
+    transition: max-height 0.5s;
+    overflow: hidden;
+    border-radius: 2px;
+    background-color: rgb(255, 205, 214);
+}
+
+.course, .box-row {
+    position: relative;
+    text-align: left;
+    padding: 0 0.3em;
+    border-color: rgb(255, 171, 186);
+    border-style: solid;
+    border-width: 0 0 0.06em 0;
+    transition: border-width 0.3s;
+    z-index: 1;
+}
+
+.box-row:first-of-type, .course:first-of-type {
+    border-width: 0.06em 0;
+}
+
+.box-row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.course::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: linear-gradient(rgb(235, 123, 143), rgb(251, 168, 183));
+    box-shadow: inset 0 0.07em 0.3em rgb(114, 114, 114);
+    z-index: -1;
+    transition: opacity 0.2s;
+    opacity: 0;
+}
+
+.course:hover::before {
+    opacity: 1;
+}
+
+#courses > .course-menu > span {
+    text-align: left;
+    display: block;
+    padding: 0.1em 0.2em 0.2em 0.3em;
+    transition: color 0.2s, box-shadow 0.5s;
+}
+
+#courses > .course-menu > span:hover {
+    color: rgb(255, 136, 158);
+    box-shadow: inset 0 0 0.3em rgb(223, 202, 208), 0 0 0.6em rgb(199, 175, 182);
+}
+
+h2 {
+    margin: 0.7em;
+}

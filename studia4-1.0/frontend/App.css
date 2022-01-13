@@ -1,0 +1,116 @@
+html {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2vw;
+    min-height: 100%;
+}
+
+body {
+    background-image: linear-gradient(rgb(252, 216, 223), rgb(255, 117, 143));
+    min-height: 100%;
+    margin: 0;
+}
+
+#content {
+    padding: 0.5em;
+    padding-top: 0.7em;
+}
+
+#content > div {
+    text-align: center;
+}
+
+#footer {
+    background-image: linear-gradient(rgb(235, 27, 86), rgb(201, 24, 74));
+    box-shadow: 0 0.05em 0.3em rgb(124, 123, 123);
+    font-size: 0.5rem;
+    padding: 0.3em;
+}
+
+.button {
+    position: relative;
+    cursor: pointer;
+    margin: 0 0.3em;
+    display: inline-block;
+    font-size: 0.6rem;
+    border: none;
+    border-radius: 0.3em;
+    text-align: center;
+    background-image: linear-gradient(rgb(255, 242, 245), rgb(255, 205, 214) 2px calc(100% - 2px), rgb(253, 153, 172));
+    /* background-image: linear-gradient(rgb(251, 171, 186), rgb(255, 143, 163) 2px calc(100% - 2px), rgb(230, 130, 149)); */
+    box-shadow: 0 0.04em 0.2em rgb(116, 116, 116), inset 0 0.07em 0.15em rgb(238, 210, 216);
+}
+
+.button-clicked {
+    box-shadow: inset 0 0 0.2em rgb(116, 116, 116), 0 0.07em 10.07em rgb(156, 156, 156);
+    background-image: linear-gradient(rgb(253, 153, 172), rgb(255, 205, 214) 2px calc(100% - 2px), rgb(255, 242, 245));
+}
+
+.bdummy, .btext {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.1em 0.2vw;
+}
+
+.bdummy {
+    opacity: 0;
+}
+
+.btext {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.btext-clicked {
+    font-size: 0.54rem;
+}
+
+.search-bar {
+    position: relative;
+    display: inline-block;
+    font-size: 0.7rem;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 0.1em solid gray;
+    z-index: 5;
+}
+
+.suggestion {
+    background-color: aliceblue;
+    border-top: 0.1em solid gray;
+}
+
+.suggestion:hover, .focused-sugg {
+    background-color: rgb(255, 137, 158);
+}
+
+.pop-up {
+    display: inline-block;
+    background-color: rgb(230, 62, 109);
+    padding: 0.5em 1em;
+    overflow-x: hidden;
+    border: 0.16em solid rgb(156, 33, 68);
+    border-radius: 0.5em;
+}
+
+.pop-up-container {
+    position: fixed;
+    left: 0;
+    top: 2em;
+    height: calc(100% - 2em);
+    overflow-y: auto;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+}
+
+.group-selector {
+    margin-bottom: 0.5em;
+}
