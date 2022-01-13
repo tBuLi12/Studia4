@@ -235,11 +235,11 @@ public class Studia4Controller {
 
 
     @GetMapping("/poll-result")
-    ArrayList<PollResult> getPollResult(@RequestParam String pollID)
+    ArrayList<PollResult> getPollResult(Authentication authentication)
     {
         ArrayList<PollResult> polls = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
-        params.add(pollID);
+        params.add(authentication.getName());
         try (ResultSet rs = connection.getQueryResult(QueriesMapper.POLL_RESULT, params);){
             PollResult poll;
             while (rs.next()) {
