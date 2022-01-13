@@ -12,6 +12,7 @@ export default function Workers() {
     }
     return (
         <div className="content-box">
+            Pracownicy
             <SearchBar onSearch={function(str) {
                 setWorker(null);
                 setSearched(workers.filter(w => w.name.includes(str)));

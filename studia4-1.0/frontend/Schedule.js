@@ -5,6 +5,10 @@ import { fetchClasses, pushRescheduleRequest, pushRatings, fetchRatings } from "
 const hours = ["8:15", "10:15", "12:15", "14:15", "16:15", "18:15"];
 const days = ["poniedzialek", "wtorek", "sroda", "czwartek", "piatek"];
 
+function getSlotId(day, hour) {
+    return (hours.indexOf(hour) + days.indexOf(day)*6).toString();
+}
+
 function useMousePos(inital) {
     const [pos, setPos] = React.useState(inital);
     React.useEffect(function() {
@@ -122,17 +126,18 @@ export function Schedule({ initSchedule, initRatings, initSelections, onSelect, 
                         return (
                             <li key={day}><ul className="daycolumn">
                                 {day}
-                                {hours.map(hour => (
-                                    <ClassBox
-                                        key={day+hour} 
-                                        slot={day+hour} 
-                                        cls={schedBySlot[day+hour]}
-                                        selected={selections?.[day+hour]}
-                                        rating={ratings?.[day+hour]}
-                                        droppable={permResched ? "all" : dragged?.drops.includes(day+hour)}
+                                {hours.map(function(hour) {
+                                    const slot = getSlotId(day, hour);
+                                    return <ClassBox
+                                        key={slot} 
+                                        slot={slot} 
+                                        cls={schedBySlot[slot]}
+                                        selected={selections?.[slot]}
+                                        rating={ratings?.[slot]}
+                                        droppable={permResched ? "all" : dragged?.drops.includes(slot)}
                                         {...fwd}
                                     />
-                                ))}
+                                })}
                             </ul></li>
                         );
                     })}
@@ -325,7 +330,11 @@ function Rater({ dispatch, slot, rating, mode }) {
 
 export function expandSelection(sel) {
     const fullSel = {};
-    days.forEach(day => hours.forEach(hour => {fullSel[day+hour] = false}));
+    
+    Array.from(Array(30).keys()).forEach(i => {fullSel[i] = false});
+    console.log(Array(10));
+    console.log(sel);
+    console.log(fullSel);
     return {...fullSel, ...sel};
 }
 

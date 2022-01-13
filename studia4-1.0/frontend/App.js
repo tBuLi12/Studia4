@@ -49,9 +49,9 @@ export default function App() {
                 {name: "Przedmioty", view: <CoursesList/>},
                 {name: "Plan zajęć", view: <ScheduleView/>},
                 {name: "Oceny", view: <Grades/>},
-                {name: "Zmiany grup", view: <ReschedRequests/>},
+                {name: "Zmiany grup", view: <ReschedRequests/>, nNots: user ? 3 : undefined},
                 {name: "Rejestracja", view: <Register/>},
-                {name: "Ankiety", view: <Polls/>},
+                {name: "Ankiety", view: <Polls/>, nNots: user ? 10 : undefined},
                 {name: "Aktualności", view: <News/>},
                 {name: "Pracownicy", view: <Workers/>},
                 {name: "Plan", view: <AdminSchedule/>},
@@ -99,7 +99,7 @@ export function SearchBar({ onSearch, suggestions }) {
     const [focusedSugg, setFocusedSugg] = React.useState(null);
     const [showSugg, setShowSugg] = React.useState(true);
     const fltrSuggerstions = React.useMemo(() => suggestions
-        .filter(sug => sug.includes(searchVal)),
+        ?.filter(sug => sug.includes(searchVal)),
     [suggestions, searchVal])
     return (
         <form onSubmit={function(event) {
@@ -189,7 +189,7 @@ export function GroupSelector({ onSelect }) {
     const [groups, setGroups] = React.useState([]);
     const groupNames = React.useMemo(() => allGroups?.map(gr => gr.name), [allGroups]);
     if (allGroups === null) {
-        return <div>Loading...</div>
+        return <div>Loading...</div>;
     }
     return (
         <div>

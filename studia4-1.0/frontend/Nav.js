@@ -4,9 +4,12 @@ import { LogInLink } from './Login';
 import './Nav.css';
 
 
-export function NavLink({ children, view }) {
+export function NavLink({ children, view, nNots }) {
     const dispatch = React.useContext(DispatchContext);
-    return <span onClick={() => dispatch({action: "setContent", data: view})}>{children}</span>;
+    return (<span onClick={() => dispatch({action: "setContent", data: view})}>
+        {children}
+        {nNots && <div className="notifIndicator">{nNots}</div>}
+    </span>);
 }
 
 function ShowNav({ toggle }) {
@@ -27,7 +30,7 @@ export default function NavBar({ links, windWidth }) {
         return (
             <nav>
                 <div style={{display: sideVisible ? "block" : "none"}}>
-                    {links.map(link => <NavLink view={user ? link.view : prompt} stack={true}>{link.name}</NavLink>)}
+                    {links.map((link, i) => <NavLink key={i} view={user ? link.view : prompt} stack={true} nNots={link.nNots}>{link.name}</NavLink>)}
                 </div>
                 <ShowNav toggle={function() {setSide(prev => !prev)}}/>
                 <LogInLink/>
@@ -37,7 +40,7 @@ export default function NavBar({ links, windWidth }) {
     return (
         <nav>
             <LogInLink/>
-            {links.map(link => <NavLink view={user ? link.view : prompt} stack={false}>{link.name}</NavLink>)}
+            {links.map((link, i) => <NavLink key={i} view={user ? link.view : prompt} stack={false} nNots={link.nNots}>{link.name}</NavLink>)}
         </nav>
     );
 }

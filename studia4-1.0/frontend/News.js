@@ -1,4 +1,5 @@
 import { fetchNews, useRemoteData } from "./Remote";
+import './News.css';
 
 export default function News() {
     const infos = useRemoteData(fetchNews);
@@ -6,10 +7,13 @@ export default function News() {
         return <div>Loading news...</div>
     }
     return (
-        <div className="content-box">
-            {infos.map(info => <div className="content-row">
-                <h2>{info.title}</h2>
-                {info.text}
+        <div className="content-box" id="news-box">
+            Aktualności
+            {infos.map(info => <div className="box-row">
+                <h3>{info.title}</h3>
+                <div className="info-box">
+                    {info.text}
+                </div>
             </div>)}
         </div>
     );

@@ -15,6 +15,7 @@ export default function LogIn() {
     return (
         <form onSubmit={onSubmit}>
             <input type="text" name="name" value={nameVal} onChange={onChange} required placeholder="Login"/><br/>
+            <input type="password" name="password" value={nameVal} onChange={onChange} required placeholder="Hasło"/><br/>
             <Button submit>Log in</Button>
         </form>
     );

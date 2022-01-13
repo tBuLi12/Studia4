@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserContext } from './App';
-const dummyData = true;
+const dummyData = false;
 
 export function useRemoteData(fetcher) {
     const user = React.useContext(UserContext);
@@ -22,55 +22,23 @@ export async function fetchCourses(user) {
             }
         ]
     }
-    const url = new URL("http://papz22.tplinkdns.com:2137/courses");
-    url.searchParams.append("name", user);
-    return await fetch(url).then(res => res.json());
+    return await fetch("http://" + document.location.host + "/classes").then(res => res.json());
 }
 
-export async function fetchClasses(user) {
+export async function fetchClasses() {
     if (dummyData) {
-        // setter({
-        //     "poniedzialek10:15": [{
-        //         name: "WSI",
-        //         room: "98",
-        //         id: 0,
-        //         type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
-        //         alts: ["poniedzialek10:15", "piatek18:15"]
-        //     },
-        //     {
-        //         name: "SI",
-        //         room: "98",
-        //         id: 1,
-        //         type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
-        //         alts: []
-        //     },
-        //     {
-        //         name: "Wsi",
-        //         room: "11",
-        //         id: 2,
-        //         type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
-        //         alts: []
-        //     }],
-        //     "piatek12:15": [{
-        //         name: "nji",
-        //         room: "98",
-        //         id: 3,
-        //         type: "lab",
-        //         alts: []
-        //     }]
-        // })
         return {
             0: {
                 name: "WSI",
-                slot: "poniedzialek10:15",
+                slot: "2",
                 room: "98",
                 id: 0,
                 type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
-                alts: ["poniedzialek10:15", "piatek18:15"]
+                alts: ["2", "29"]
             },
             1: {
                 name: "SI",
-                slot: "poniedzialek10:15",
+                slot: "2",
                 room: "98",
                 id: 1,
                 type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
@@ -78,7 +46,7 @@ export async function fetchClasses(user) {
             },
             2: {
                 name: "Wsi",
-                slot: "poniedzialek10:15",
+                slot: "2",
                 room: "11",
                 id: 2,
                 type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
@@ -86,7 +54,7 @@ export async function fetchClasses(user) {
             },
             3: {
                 name: "nji",
-                slot: "piatek12:15",
+                slot: "26",
                 room: "98",
                 id: 3,
                 type: "lab",
@@ -95,25 +63,21 @@ export async function fetchClasses(user) {
         };
     }
     const url = new URL("http://" + document.location.host + "/classes");
-    url.searchParams.append("name", user);
-    fetch(url).then(res => res.json()).then(function(data) {
-        const classes = {};
-        data.forEach(cls => {
-            const slot = cls.week_day + cls.starting_time;
-            (classes[slot] ?? (classes[slot] = [])).push({
-                name: cls.name,
-                room: cls.classroom_id,
-                type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)]
-            });
-        });
-    });
+    url.searchParams.append("flag", "1");
+    const classes = await fetch(url).then(res => res.json());
+    const schedObj = {};
+    classes.forEach(cls => schedObj[cls.id] = cls);
+    return schedObj;
 }
 
 export async function fetchRatings() {
+
+    // [[1, 2], [1, 2]]
+    // {1: 2, 1: 2}
     return ({
-        "poniedzialek10:15": 0,
-        "poniedzialek16:15": 3,
-        "czwartek10:15": 76,
+        "2": 0,
+        "5": 2,
+        "0": 2,
     });
 }
 
@@ -152,18 +116,19 @@ export async function subjectRegister(id) {
     return true;
 }
 
-export async function classRegister(id) {
+export async function classRegister(sbjId, slot) {
     return true;
 }
 
-export async function fetchCoursesRegister(filter) {
-    return [[{
+export async function fetchCoursesRegister() {
+    return [{
         name: "WSI",
         id: 0,
     },
     {
         name: "SOI",
         id: 2,
+        slots: [0, 2, 5]
     },
     {
         name: "PAP",
@@ -172,13 +137,13 @@ export async function fetchCoursesRegister(filter) {
     {
         name: "PROB",
         id: 4,
-    }], new Set([0, 3])];
+    }];
 }
 
 export async function resolvePoll(id) {
     return {
-        "poniedzialek10:15": 13,
-        "piatek16:15": 10,
+        "2": 13,
+        "15": 10,
     }
 }
 
@@ -207,7 +172,7 @@ export async function fetchRequests(user) {
             type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
         },
         stud: "Jeremi S",
-        to: "poniedziałek10:15"
+        to: "3"
     },
     {
         id: 1,
@@ -216,7 +181,7 @@ export async function fetchRequests(user) {
             type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
         },
         stud: "Karol O",
-        to: "piatek10:15"
+        to: "25"
     }
     ])
 }
@@ -254,8 +219,8 @@ export async function fetchGroups(user) {
 
 export async function fetchIntersect(groups) {
     return ({
-        "wtorek14:15": true,
-        "czwartek14:15": true,
+        "8": true,
+        "12": true,
     })
 }
 
@@ -263,28 +228,28 @@ export async function fetchGroupSchedule(groups) {
     return {
         0: {
             name: "WSI",
-            slot: "poniedzialek10:15",
+            slot: "2",
             room: "98",
             id: 0,
             type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
         },
         1: {
             name: "SI",
-            slot: "poniedzialek10:15",
+            slot: "2",
             room: "98",
             id: 1,
             type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
         },
         2: {
             name: "Wsi",
-            slot: "poniedzialek10:15",
+            slot: "2",
             room: "11",
             id: 2,
             type: ["lab", "exercise", "lecture"][Math.floor(Math.random()*3)],
         },
         3: {
             name: "nji",
-            slot: "piatek12:15",
+            slot: "10",
             room: "98",
             id: 3,
             type: "lab",
@@ -293,7 +258,7 @@ export async function fetchGroupSchedule(groups) {
 }
 
 export async function fetchPollSlots(id) {
-    return {"poniedzialek8:15": 3, "czwartek16:15": 4};
+    return {"0": 3, "22": 4};
 }
 
 export async function fetchNews() {
