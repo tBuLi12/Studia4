@@ -70,9 +70,15 @@ public class Studia4Controller {
                 lecture.setWeek_day(rs.getString("week_day"));
                 lecture.setTimeSlotID(rs.getInt("time_slot_id"));
                 lectures.add(lecture);
-                Integer id = lecture.getId();
-                if(flag != null)
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(flag != null)
                 {
+                    for (Classes lec : lectures){
+                Integer id = lec.getId();
                 ArrayList<String> sub_params = new ArrayList<>();
                 sub_params.add(id.toString());
                 try (ResultSet rs_sub = connection.getQueryResult(QueriesMapper.ALTERNATIVES, sub_params);){
@@ -81,7 +87,7 @@ public class Studia4Controller {
                         alt = new Alternative();
                         alt.setTimeSlot(rs_sub.getString("time_slot"));
                         alt.setWeekDay(rs_sub.getString("week_day"));
-                        lecture.getAlternatives().add(alt);
+                        lec.getAlternatives().add(alt);
                     }
                     rs_sub.close();
                 } catch (SQLException e) {
@@ -89,10 +95,6 @@ public class Studia4Controller {
                 }
                 }
             }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return lectures;
     }
 
