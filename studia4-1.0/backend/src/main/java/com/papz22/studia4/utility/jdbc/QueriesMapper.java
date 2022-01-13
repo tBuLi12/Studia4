@@ -65,16 +65,19 @@ public enum QueriesMapper {
 
         ADD_SLOT_TO_POLL("INSERT INTO poll_time VALUES (NULL, ?, ?)"),
 
-        SET_POLL_RATING("INSERT INTO poll_time_ratings VALUES ("
+        INSERT_POLL_RATING("INSERT INTO poll_time_ratings VALUES ("
         +"(Select person FROM Users WHERE username = '?'), (SELECT poll_slot_id "
         +"FROM poll_time pt WHERE pt.slot_id = ? AND pt.poll_id = ?), ?)"),
 
         GET_MAX_POLL_ID("SELECT MAX(POLL_ID) as MAX FROM polls"),
 
-        POLL_RESULT("select ptr.poll_slot_id, ptr.rating "
+        POLL_RESULT("pt.slot_id, SUM(ptr.rating) as rating"
         +"from poll_time_ratings ptr "
         +"join poll_time pt on pt.poll_slot_id = ptr.poll_slot_id "
-        +"where poll_id = ?"),
+        +"where poll_id = ? "
+        +"GROUP BY pt.slot_id"),
+
+        FETCH_POLLS("SELECT poll_name, poll_id FROM polls WHERE creator_id = '?'"),
 
         ALTERNATIVES("SELECT ts.week_day, ts.time_slot "
         + "FROM (SELECT subject, class_type FROM Classes WHERE id_classes = ?) current_class, Classes Cl "

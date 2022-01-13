@@ -158,45 +158,32 @@ public class Studia4Controller {
     }
 
     @PostMapping("/set-poll-rating")
-    void setPollRatings(Authentication auth, @RequestParam String slotID, @RequestParam String pollID) 
+    void setPollRatings(@RequestParam ArrayList<String> slotIDs, @RequestParam String pollID, @RequestParam ArrayList<String> ratings) 
     {
-        ArrayList<String> params = new ArrayList<>();
-        params.add(auth.getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<String> params;
+        String username = authentication.getName();
         try
         {
-            ParametersValidator.isInteger(slotID);
+            for (int i = 0; i < slotIDs.size(); i++){
+            params = new ArrayList<>();
+            ParametersValidator.isInteger(slotIDs.get(i));
             ParametersValidator.isInteger(pollID);
-            params.add(slotID);
+            ParametersValidator.isInteger(ratings.get(i));
+            params.add(username);
+            params.add(slotIDs.get(i));
             params.add(pollID);
+            params.add(ratings.get(i));
             try {
-                connection.executeUpdateOrDelete(QueriesMapper.SET_POLL_RATING, params);
+                connection.executeUpdateOrDelete(QueriesMapper.INSERT_POLL_RATING, params);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
         } catch(InvalidGetParameterException e) {
             e.printStackTrace();
         }
     }
-
-    // @PostMapping("add-slot-to-poll")
-    // void addPollRatings(@RequestParam String slotID, @RequestParam String pollID) 
-    // {
-    //     ArrayList<String> params = new ArrayList<>();
-    //     try
-    //     {
-    //         ParametersValidator.isInteger(slotID);
-    //         ParametersValidator.isInteger(pollID);
-    //         params.add(slotID);
-    //         params.add(pollID);
-    //         try {
-    //             connection.executeUpdateOrDelete(QueriesMapper.ADD_SLOT_TO_POLL, params);
-    //         } catch (SQLException e) {
-    //             e.printStackTrace();
-    //         }
-    //     } catch(InvalidGetParameterException e) {
-    //         e.printStackTrace();
-    //     }
-    // }    
 
     @PostMapping("/delete-poll")
     void deletePoll(@RequestParam String pollID) 
@@ -220,7 +207,6 @@ public class Studia4Controller {
     void addPoll(@RequestParam String name, @RequestParam ArrayList<String> slots) 
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(name);
         String username = authentication.getName();
         ArrayList<String> params = new ArrayList<>();
         params.add(username);
@@ -249,17 +235,39 @@ public class Studia4Controller {
 
 
     @GetMapping("/poll-result")
-    ArrayList<PollResult> getPollResult(@RequestParam String pollId)
+    ArrayList<PollResult> getPollResult(@RequestParam String pollID)
     {
         ArrayList<PollResult> polls = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
-        params.add(pollId);
+        params.add(pollID);
         try (ResultSet rs = connection.getQueryResult(QueriesMapper.POLL_RESULT, params);){
             PollResult poll;
             while (rs.next()) {
                 poll = new PollResult();
-                poll.setSlotId(rs.getInt("poll_slot_id"));
+                poll.setSlotId(rs.getInt("slot_id"));
                 poll.setRating(rs.getInt("rating"));
+                polls.add(poll);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return polls;
+    }
+
+
+    @GetMapping("/polls")
+    ArrayList<PollResult> getPolls(@RequestParam String pollID)
+    {
+        ArrayList<PollResult> polls = new ArrayList<>();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(pollID);
+        try (ResultSet rs = connection.getQueryResult(QueriesMapper.FETCH_POLLS, params);){
+            PollResult poll;
+            while (rs.next()) {
+                poll = new PollResult();
+                poll.setPollID(rs.getInt("poll_id"));
+                poll.setPollName(rs.getString("poll_name"));
                 polls.add(poll);
             }
             rs.close();
