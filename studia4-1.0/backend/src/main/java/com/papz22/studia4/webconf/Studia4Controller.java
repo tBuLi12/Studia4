@@ -98,33 +98,6 @@ public class Studia4Controller {
         return lectures;
     }
 
-    // @GetMapping("/alternatives")
-    // ArrayList<Alternative> getAlternatives(@RequestParam String id) {
-    //     ArrayList<Alternative> alts = new ArrayList<>();
-    //     ArrayList<String> params = new ArrayList<>();
-    //     try
-    //     {
-    //         ParametersValidator.isInteger(id);
-    //         params.add(id);
-    //         try (ResultSet rs = connection.getQueryResult(QueriesMapper.ALTERNATIVES, params);){
-    //             Alternative alt;
-    //             while (rs.next()) {
-    //                 alt = new Alternative();
-    //                 alt.setTimeSlot(rs.getString("time_slot"));
-    //                 alt.setWeekDay(rs.getString("week_day"));
-    //                 alts.add(alt);
-    //             }
-    //             rs.close();
-    //         } catch (SQLException e) {
-    //             e.printStackTrace();
-    //         }
-    //     } catch(InvalidGetParameterException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return alts;
-    // }
-
-
 
     @GetMapping("/logged")
     Map<String, String> getLoggedUser(Authentication authentication)
