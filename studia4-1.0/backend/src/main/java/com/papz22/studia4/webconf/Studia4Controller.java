@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import com.papz22.studia4.repository.Alternative;
 import com.papz22.studia4.repository.ChangeRequest;
 import com.papz22.studia4.repository.Classes;
+import com.papz22.studia4.repository.PollResult;
 import com.papz22.studia4.repository.UniSubject;
 import com.papz22.studia4.utility.ParametersValidator;
 import com.papz22.studia4.utility.exception.InvalidGetParameterException;
@@ -156,7 +157,7 @@ public class Studia4Controller {
         return requests;
     }
 
-    @PostMapping("set-poll-rating")
+    @PostMapping("/set-poll-rating")
     void setPollRatings(Authentication auth, @RequestParam String slotID, @RequestParam String pollID) 
     {
         ArrayList<String> params = new ArrayList<>();
@@ -177,27 +178,27 @@ public class Studia4Controller {
         }
     }
 
-    @PostMapping("add-slot-to-poll")
-    void addPollRatings(@RequestParam String slotID, @RequestParam String pollID) 
-    {
-        ArrayList<String> params = new ArrayList<>();
-        try
-        {
-            ParametersValidator.isInteger(slotID);
-            ParametersValidator.isInteger(pollID);
-            params.add(slotID);
-            params.add(pollID);
-            try {
-                connection.executeUpdateOrDelete(QueriesMapper.ADD_SLOT_TO_POLL, params);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch(InvalidGetParameterException e) {
-            e.printStackTrace();
-        }
-    }    
+    // @PostMapping("add-slot-to-poll")
+    // void addPollRatings(@RequestParam String slotID, @RequestParam String pollID) 
+    // {
+    //     ArrayList<String> params = new ArrayList<>();
+    //     try
+    //     {
+    //         ParametersValidator.isInteger(slotID);
+    //         ParametersValidator.isInteger(pollID);
+    //         params.add(slotID);
+    //         params.add(pollID);
+    //         try {
+    //             connection.executeUpdateOrDelete(QueriesMapper.ADD_SLOT_TO_POLL, params);
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //         }
+    //     } catch(InvalidGetParameterException e) {
+    //         e.printStackTrace();
+    //     }
+    // }    
 
-    @PostMapping("delte-poll")
+    @PostMapping("/delete-poll")
     void deletePoll(@RequestParam String pollID) 
     {
         ArrayList<String> params = new ArrayList<>();
@@ -215,20 +216,57 @@ public class Studia4Controller {
         }
     }
     
-    @PostMapping("add-poll")
-    void addPoll(Authentication authentication, @RequestPart String pollName) 
+    @PostMapping("/add-poll")
+    void addPoll(Authentication authentication, @RequestPart String pollName, @RequestPart ArrayList<String> timeSlots) 
     {
         System.out.println(pollName);
         String username = authentication.getName();
         ArrayList<String> params = new ArrayList<>();
         params.add(username);
         params.add(pollName);
-            try {
-                connection.executeUpdateOrDelete(QueriesMapper.ADD_POLL, params);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            // adds new table with username and pollname - generates incremently id
+            connection.executeUpdateOrDelete(QueriesMapper.ADD_POLL, params);
+            ResultSet rs = connection.getQueryResut(QueriesMapper.GET_MAX_POLL_ID);
+            // generated poll id 
+            String maxPollId = rs.getString("MAX");
+            rs.close();
+            ArrayList<String> subParams;
+            for(String slot : timeSlots)
+            {
+                // for every time slot add new time slot matching with id
+                subParams = new ArrayList<>();
+                subParams.add(slot);
+                subParams.add(maxPollId);
+                connection.executeUpdateOrDelete(QueriesMapper.ADD_SLOT_TO_POLL, subParams);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+
+    @GetMapping("/poll-result")
+    ArrayList<PollResult> getPollResult(@RequestParam String pollId)
+    {
+        ArrayList<PollResult> polls = new ArrayList<>();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(pollId);
+        try (ResultSet rs = connection.getQueryResult(QueriesMapper.POLL_RESULT, params);){
+            PollResult poll;
+            while (rs.next()) {
+                poll = new PollResult();
+                poll.setSlotId(rs.getInt("poll_slot_id"));
+                poll.setRating(rs.getInt("rating"));
+                polls.add(poll);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return polls;
+    }
+
 
     // @PostMapping("set-ratings")
     // void setRatings(Authentication authentication, @RequestPart String slot, @RequestPart String rating) 

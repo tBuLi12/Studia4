@@ -69,6 +69,13 @@ public enum QueriesMapper {
         +"(Select person FROM Users WHERE username = '?'), (SELECT poll_slot_id "
         +"FROM poll_time pt WHERE pt.slot_id = ? AND pt.poll_id = ?), ?)"),
 
+        GET_MAX_POLL_ID("SELECT MAX(POLL_ID) as MAX FROM polls"),
+
+        POLL_RESULT("select ptr.poll_slot_id, ptr.rating "
+        +"from poll_time_ratings ptr "
+        +"join poll_time pt on pt.poll_slot_id = ptr.poll_slot_id "
+        +"where poll_id = ?"),
+
         ALTERNATIVES("SELECT ts.week_day, ts.time_slot "
         + "FROM (SELECT subject, class_type FROM Classes WHERE id_classes = ?) current_class, Classes Cl "
         + "JOIN time_slots ts using (time_slot_id) "
