@@ -14,7 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JDCBConnection {
 
-    JDCBConnection(){};
+    private Connection connection;
+    public JDCBConnection() throws SQLException
+    {
+        connection = DataSourceConfig.getConnection();
+    };
 
     private String queryToString(QueriesMapper query)
     {
@@ -38,26 +42,28 @@ public class JDCBConnection {
 
     public ResultSet getQueryResut(QueriesMapper query) throws SQLException
     {
-        Connection con = DataSourceConfig.getConnection();
-        PreparedStatement pst = con.prepareStatement(queryToString(query));
+        
+        PreparedStatement pst = connection.prepareStatement(queryToString(query));
         ResultSet rs = pst.executeQuery();
         return rs;
     }
 
     public ResultSet getQueryResult(QueriesMapper query, ArrayList<String> params) throws SQLException
     {
-        Connection con = DataSourceConfig.getConnection();
-        PreparedStatement pst = con.prepareStatement(mapParametersToQuery(queryToString(query), params));
+        PreparedStatement pst = connection.prepareStatement(mapParametersToQuery(queryToString(query), params));
         ResultSet rs = pst.executeQuery();
         return rs;
     }
 
     public void executeUpdateOrDelete(QueriesMapper query, ArrayList<String> params) throws SQLException
     {
-        Connection con = DataSourceConfig.getConnection();
-        PreparedStatement pst = con.prepareStatement(mapParametersToQuery(queryToString(query), params));
+        PreparedStatement pst = connection.prepareStatement(mapParametersToQuery(queryToString(query), params));
         pst.executeUpdate();
         pst.close();
-        con.close();
+    }
+
+    public void closeConnection() throws SQLException
+    {
+        this.connection.close();
     }
 }

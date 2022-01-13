@@ -25,6 +25,7 @@ public class DataSourceConfig {
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         config.setMaximumPoolSize(10);
+        config.getLeakDetectionThreshold();
         ds = new HikariDataSource( config );
     }
 

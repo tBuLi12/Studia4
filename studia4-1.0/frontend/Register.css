@@ -1,8 +1,0 @@
-.indicator {
-    display: inline-block;
-    width: 0.85em;
-    height: 0.85em;
-    border-radius: 0.16em;
-    box-sizing: border-box;
-    border: 0.1em solid rgb(187, 20, 67);
-}
