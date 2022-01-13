@@ -71,7 +71,7 @@ public enum QueriesMapper {
 
         GET_MAX_POLL_ID("SELECT MAX(POLL_ID) as MAX FROM polls"),
 
-        POLL_RESULT("pt.slot_id, SUM(ptr.rating) as rating"
+        POLL_RESULT("pt.slot_id, SUM(ptr.rating) as rating "
         +"from poll_time_ratings ptr "
         +"join poll_time pt on pt.poll_slot_id = ptr.poll_slot_id "
         +"where poll_id = ? "
