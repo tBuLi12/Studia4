@@ -235,11 +235,11 @@ public class Studia4Controller {
 
 
     @GetMapping("/poll-result")
-    ArrayList<PollResult> getPollResult(Authentication authentication)
+    ArrayList<PollResult> getPollResult(@RequestParam String pollID)
     {
         ArrayList<PollResult> polls = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
-        params.add(authentication.getName());
+        params.add(pollID);
         try (ResultSet rs = connection.getQueryResult(QueriesMapper.POLL_RESULT, params);){
             PollResult poll;
             while (rs.next()) {
@@ -257,11 +257,11 @@ public class Studia4Controller {
 
 
     @GetMapping("/polls")
-    ArrayList<PollResult> getPolls(@RequestParam String pollID)
+    ArrayList<PollResult> getPolls(Authentication auth)
     {
         ArrayList<PollResult> polls = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
-        params.add(pollID);
+        params.add(auth.getName());
         try (ResultSet rs = connection.getQueryResult(QueriesMapper.FETCH_POLLS, params);){
             PollResult poll;
             while (rs.next()) {
