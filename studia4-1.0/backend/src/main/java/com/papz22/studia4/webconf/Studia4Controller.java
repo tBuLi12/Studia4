@@ -20,6 +20,7 @@ import com.papz22.studia4.utility.jdbc.QueriesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Studia4Controller {
 
-    @Autowired
-    JDCBConnection connection;
+    // @Autowired
+    // JDCBConnection connection;
 
     @Autowired
     PeselExtractor extractor;
@@ -39,7 +40,9 @@ public class Studia4Controller {
         ArrayList<UniSubject> clss = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         params.add(auth.getName());
-        try (ResultSet rs = connection.getQueryResult(QueriesMapper.COURSES, params);){
+        try{
+        JDCBConnection connection = new JDCBConnection();
+        ResultSet rs = connection.getQueryResult(QueriesMapper.COURSES, params);
             UniSubject cls;
             while (rs.next()) {
                 cls = new UniSubject();
@@ -48,6 +51,7 @@ public class Studia4Controller {
                 clss.add(cls);
             }
             rs.close();
+            connection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,12 +59,15 @@ public class Studia4Controller {
     }
 
     @GetMapping("/classes")
+    @Transactional
     ArrayList<Classes> getClasses(Authentication auth, @RequestParam(required = false) String flag) {
         
         ArrayList<Classes> lectures = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         params.add(auth.getName());
-        try (ResultSet rs = connection.getQueryResult(QueriesMapper.CLASSES, params);){
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            ResultSet rs = connection.getQueryResult(QueriesMapper.CLASSES, params);
             Classes lecture;
             while (rs.next()) {
                 lecture = new Classes();
@@ -73,6 +80,7 @@ public class Studia4Controller {
                 lectures.add(lecture);
             }
             rs.close();
+            connection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -82,7 +90,9 @@ public class Studia4Controller {
                 Integer id = lec.getId();
                 ArrayList<String> sub_params = new ArrayList<>();
                 sub_params.add(id.toString());
-                try (ResultSet rs_sub = connection.getQueryResult(QueriesMapper.ALTERNATIVES, sub_params);){
+                try {
+                    JDCBConnection connection = new JDCBConnection();
+                    ResultSet rs_sub = connection.getQueryResult(QueriesMapper.ALTERNATIVES, sub_params);
                     Alternative alt;
                     while (rs_sub.next()) {
                         alt = new Alternative();
@@ -91,6 +101,7 @@ public class Studia4Controller {
                         lec.getAlternatives().add(alt);
                     }
                     rs_sub.close();
+                    connection.closeConnection();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -127,7 +138,10 @@ public class Studia4Controller {
     ArrayList<String> params = new ArrayList<>();
         params.add(id);
     {
-        try {connection.executeUpdateOrDelete(QueriesMapper.DELETE_REQUEST_CHANGE_GROUP, params);
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            connection.executeUpdateOrDelete(QueriesMapper.DELETE_REQUEST_CHANGE_GROUP, params);
+            connection.closeConnection();
         }catch(SQLException e){
             e.printStackTrace();
             }
@@ -139,7 +153,9 @@ public class Studia4Controller {
         ArrayList<ChangeRequest> requests = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         params.add(auth.getName());
-        try (ResultSet rs = connection.getQueryResult(QueriesMapper.REQUESTS, params);){
+        try{
+            JDCBConnection connection = new JDCBConnection(); 
+            ResultSet rs = connection.getQueryResult(QueriesMapper.REQUESTS, params);
             ChangeRequest req;
             while (rs.next()) {
                 req = new ChangeRequest();
@@ -151,6 +167,7 @@ public class Studia4Controller {
                 requests.add(req);
             }
             rs.close();
+            connection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -163,47 +180,50 @@ public class Studia4Controller {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         ArrayList<String> params;
         String username = authentication.getName();
-        try
-        {
+        try{
+            JDCBConnection connection = new JDCBConnection();
             for (int i = 0; i < slotIDs.size(); i++){
-            params = new ArrayList<>();
-            ParametersValidator.isInteger(slotIDs.get(i));
-            ParametersValidator.isInteger(pollID);
-            ParametersValidator.isInteger(ratings.get(i));
-            params.add(username);
-            params.add(slotIDs.get(i));
-            params.add(pollID);
-            params.add(ratings.get(i));
-            try {
+                params = new ArrayList<>();
+                ParametersValidator.isInteger(slotIDs.get(i));
+                ParametersValidator.isInteger(pollID);
+                ParametersValidator.isInteger(ratings.get(i));
+                params.add(username);
+                params.add(slotIDs.get(i));
+                params.add(pollID);
+                params.add(ratings.get(i));
                 connection.executeUpdateOrDelete(QueriesMapper.INSERT_POLL_RATING, params);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
+            connection.closeConnection();
         } catch(InvalidGetParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
             e.printStackTrace();
         }
     }
 
     @PostMapping("/delete-poll")
+    @Transactional
     void deletePoll(@RequestParam String pollID) 
     {
         ArrayList<String> params = new ArrayList<>();
         try
         {
+            JDCBConnection connection = new JDCBConnection();
             ParametersValidator.isInteger(pollID);
             params.add(pollID);
-            try {
-                connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL, params);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL_TIME_RATINGS, params);
+            connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL_TIME, params);
+            connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL, params);
+            connection.closeConnection();
         } catch(InvalidGetParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
             e.printStackTrace();
         }
     }
     
     @PostMapping("/add-poll")
+    @Transactional
     void addPoll(@RequestParam String name, @RequestParam ArrayList<String> slots) 
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -211,14 +231,19 @@ public class Studia4Controller {
         ArrayList<String> params = new ArrayList<>();
         params.add(username);
         params.add(name);
+        String maxPollId = "";
         try {
+            JDCBConnection connection = new JDCBConnection();
             // adds new table with username and pollname - generates incremently id
             connection.executeUpdateOrDelete(QueriesMapper.ADD_POLL, params);
-            ResultSet rs = connection.getQueryResut(QueriesMapper.GET_MAX_POLL_ID);
+            try(ResultSet rs = connection.getQueryResut(QueriesMapper.GET_MAX_POLL_ID);){
             // generated poll id 
             rs.next();
-            String maxPollId = rs.getString("MAX");
+            maxPollId = rs.getString("MAX");
             rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             ArrayList<String> subParams;
             for(String slot : slots)
             {
@@ -228,6 +253,7 @@ public class Studia4Controller {
                 subParams.add(maxPollId);
                 connection.executeUpdateOrDelete(QueriesMapper.ADD_SLOT_TO_POLL, subParams);
             }
+            connection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -240,7 +266,9 @@ public class Studia4Controller {
         ArrayList<PollResult> polls = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         params.add(pollID);
-        try (ResultSet rs = connection.getQueryResult(QueriesMapper.POLL_RESULT, params);){
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            ResultSet rs = connection.getQueryResult(QueriesMapper.POLL_RESULT, params);
             PollResult poll;
             while (rs.next()) {
                 poll = new PollResult();
@@ -249,6 +277,7 @@ public class Studia4Controller {
                 polls.add(poll);
             }
             rs.close();
+            connection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -262,7 +291,9 @@ public class Studia4Controller {
         ArrayList<PollResult> polls = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         params.add(auth.getName());
-        try (ResultSet rs = connection.getQueryResult(QueriesMapper.FETCH_POLLS, params);){
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            ResultSet rs = connection.getQueryResult(QueriesMapper.FETCH_POLLS, params);
             PollResult poll;
             while (rs.next()) {
                 poll = new PollResult();
@@ -271,6 +302,7 @@ public class Studia4Controller {
                 polls.add(poll);
             }
             rs.close();
+            connection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }

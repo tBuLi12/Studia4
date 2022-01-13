@@ -14,13 +14,13 @@ public class PeselExtractor
 
     public String extract(Authentication authentication)
     {
-        JDCBConnection connection = new JDCBConnection();
         String username = authentication.getName();
         ArrayList<String> params = new ArrayList<>();
         params.add(username);
         ResultSet result;
         String pesel = "";
         try{
+            JDCBConnection connection = new JDCBConnection();
             result = connection.getQueryResult(QueriesMapper.GET_PESEL, params);
             pesel = result.getString("person");
             result.close();

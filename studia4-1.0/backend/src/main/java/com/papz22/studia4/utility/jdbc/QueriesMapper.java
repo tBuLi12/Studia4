@@ -61,6 +61,12 @@ public enum QueriesMapper {
 
         ADD_POLL("INSERT INTO Polls VALUES (NULL, (Select person FROM Users WHERE username = '?'), '?')"),
 
+        DELETE_POLL_TIME_RATINGS("DELETE FROM poll_time_ratings "
+        +"WHERE poll_slot_id IN "
+        +"(SELECT poll_slot_id from poll_time where poll_id = ?)"),
+
+        DELETE_POLL_TIME("DELETE FROM poll_time WHERE poll_id = ?"),
+
         DELETE_POLL("DELETE FROM Polls WHERE poll_id = ?"),
 
         ADD_SLOT_TO_POLL("INSERT INTO poll_time VALUES (NULL, ?, ?)"),
@@ -71,7 +77,7 @@ public enum QueriesMapper {
 
         GET_MAX_POLL_ID("SELECT MAX(POLL_ID) as MAX FROM polls"),
 
-        POLL_RESULT("pt.slot_id, SUM(ptr.rating) as rating "
+        POLL_RESULT("SELECT pt.slot_id, SUM(ptr.rating) as rating "
         +"from poll_time_ratings ptr "
         +"join poll_time pt on pt.poll_slot_id = ptr.poll_slot_id "
         +"where poll_id = ? "
