@@ -116,11 +116,11 @@ public class Studia4Controller {
         return credentials;
     }
 
-    @GetMapping("/build-schedule")
-    void buildSchedule()
-    {
+    // @GetMapping("/build-schedule")
+    // void buildSchedule()
+    // {
 
-    }
+    // }
 
     @GetMapping("/delete")
     void delete(@RequestParam String id){
