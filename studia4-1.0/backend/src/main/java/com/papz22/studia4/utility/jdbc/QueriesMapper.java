@@ -77,7 +77,7 @@ public enum QueriesMapper {
         +"where poll_id = ? "
         +"GROUP BY pt.slot_id"),
 
-        FETCH_POLLS("SELECT poll_name, poll_id FROM polls WHERE creator_id = (SELECT person WHERE username = '?')"),
+        FETCH_POLLS("SELECT poll_name, poll_id FROM polls WHERE createor_id = (SELECT person FROM users WHERE username = '?')"),
 
         ALTERNATIVES("SELECT ts.week_day, ts.time_slot "
         + "FROM (SELECT subject, class_type FROM Classes WHERE id_classes = ?) current_class, Classes Cl "
