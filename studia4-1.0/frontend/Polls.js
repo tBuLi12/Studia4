@@ -41,9 +41,10 @@ export default function Polls() {
     return (
         <>
             <div className="content-box">
+                Ankiety
                 {polls.map(poll => <Poll key={poll.id} {...poll} resolve={resolve} vote={stud ? vote : null}/>)}
             </div>
-            {stud || <Button onClick={add}>Dodaj</Button>}
+            {stud || <div><Button onClick={add}>Dodaj</Button></div>}
             {popup}
         </>
     );
@@ -53,9 +54,11 @@ function Poll({ id, name, voted, resolve, vote }) {
     return (
         <div className="box-row">
             {name}
-            {vote ? <>{voted && "Zagłosowano"}<Button onClick={() => vote(id)}>Głosuj</Button></> :
-            <><Button onClick={() => resolve(id)}>Wynik</Button>
-            <Button onClick={() => removePoll(id)}>Zakończ</Button></>}
+            <span className='resched-buttons'>
+                {vote ? <>{voted && "Zagłosowano"}<Button onClick={() => vote(id)}>Głosuj</Button></> :
+                <><Button onClick={() => resolve(id)}>Wynik</Button>
+                <Button onClick={() => removePoll(id)}>Zakończ</Button></>}
+            </span>
         </div>
     )
 }

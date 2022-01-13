@@ -52,7 +52,7 @@ function Course(props) {
             <div className="course" onClick={function() {
                 setExpanded(prev => !prev);
             }}>{props.name}</div>
-            <div className="course-menu" style={{maxHeight: expanded ? "98px" : "0px"}}>
+            <div className="course-menu" style={{maxHeight: expanded ? "3em" : "0px"}}>
                 <NavLink view={<CourseInfo name={props.name}/>}>Strona przedmiotu</NavLink>
                 <NavLink view={<MaitainerInfo name={props.maitainerName}/>}>Strona prowadzącego</NavLink>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRemoteData, fetchGrades } from "./Remote";
+import './Grades.css';
 
 export default function Grades() {
     const courses = useRemoteData(fetchGrades);
@@ -8,7 +9,8 @@ export default function Grades() {
     }
     return (
         <div className='content-box'>
-            {courses.map(crs => <div className='box-row'>{crs.name}: {crs.grade}<br/></div>)}
+            Moje oceny
+            {courses.map(crs => <div className='box-row'>{crs.name}:<span className='grade'>{crs.grade}</span></div>)}
         </div>
     );
 }

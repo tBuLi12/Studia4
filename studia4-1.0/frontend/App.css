@@ -1,6 +1,6 @@
 html {
     font-family: 'Raleway', sans-serif;
-    font-size: 35px;
+    font-size: 2vw;
     min-height: 100%;
 }
 
@@ -11,7 +11,8 @@ body {
 }
 
 #content {
-    padding: 10px;
+    padding: 0.5em;
+    padding-top: 0.7em;
 }
 
 #content > div {
@@ -20,32 +21,34 @@ body {
 
 #footer {
     background-image: linear-gradient(rgb(235, 27, 86), rgb(201, 24, 74));
-    box-shadow: 0 1px 5px rgb(124, 123, 123);
-    font-size: 15px;
-    padding: 5px;
+    box-shadow: 0 0.05em 0.3em rgb(124, 123, 123);
+    font-size: 0.5rem;
+    padding: 0.3em;
 }
 
 .button {
     position: relative;
+    cursor: pointer;
+    margin: 0 0.3em;
     display: inline-block;
-    font-size: 1.2vw;
+    font-size: 0.6rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 0.3em;
     text-align: center;
     background-image: linear-gradient(rgb(255, 242, 245), rgb(255, 205, 214) 2px calc(100% - 2px), rgb(253, 153, 172));
     /* background-image: linear-gradient(rgb(251, 171, 186), rgb(255, 143, 163) 2px calc(100% - 2px), rgb(230, 130, 149)); */
-    box-shadow: 0 1px 3px rgb(116, 116, 116), inset 0 1px 2px rgb(238, 210, 216);
+    box-shadow: 0 0.04em 0.2em rgb(116, 116, 116), inset 0 0.07em 0.15em rgb(238, 210, 216);
 }
 
 .button-clicked {
-    box-shadow: inset 0 0 3px rgb(116, 116, 116), 0 1px 1px rgb(156, 156, 156);
+    box-shadow: inset 0 0 0.2em rgb(116, 116, 116), 0 0.07em 10.07em rgb(156, 156, 156);
     background-image: linear-gradient(rgb(253, 153, 172), rgb(255, 205, 214) 2px calc(100% - 2px), rgb(255, 242, 245));
 }
 
 .bdummy, .btext {
     width: 100%;
     box-sizing: border-box;
-    padding: 0.18vw 0.4vw;
+    padding: 0.1em 0.2vw;
 }
 
 .bdummy {
@@ -61,15 +64,13 @@ body {
 }
 
 .btext-clicked {
-    font-size: 1.1vw;
-    padding: 0.23vw 0.4vw;
+    font-size: 0.54rem;
 }
 
 .search-bar {
     position: relative;
     display: inline-block;
-    font-size: 20px;
-
+    font-size: 0.7rem;
 }
 
 .suggestions {
@@ -77,12 +78,12 @@ body {
     top: 100%;
     left: 0;
     right: 0;
-    border: 1px solid gray;
+    border: 0.1em solid gray;
 }
 
 .suggestion {
     background-color: aliceblue;
-    border-top: 1px solid gray;
+    border-top: 0.1em solid gray;
 }
 
 .suggestion:hover, .focused-sugg {
@@ -92,13 +93,10 @@ body {
 .pop-up {
     position: fixed;
     box-sizing: border-box;
-    top: 10vh;
-    bottom: 10vh;
-    left: 0;
-    width: 100vw;
-    max-height: 80vh;
+    top: 4em;
+    bottom: 4em;
     background-color: rgb(230, 62, 109);
-    padding: 10px;
+    padding: 3em;
     z-index: 10;
     overflow-y: auto;
 }
