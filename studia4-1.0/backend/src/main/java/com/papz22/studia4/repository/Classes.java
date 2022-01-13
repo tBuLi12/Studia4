@@ -1,5 +1,7 @@
 package com.papz22.studia4.repository;
 
+import java.util.ArrayList;
+
 public class Classes
 {
     private int id;
@@ -16,9 +18,16 @@ public class Classes
     private String class_type;
     private String roomNumber;
     private int timeSlotID;
+    private ArrayList<Alternative> alternatives = new ArrayList<>();
 
     public Classes(){}
 
+
+
+    public ArrayList<Alternative> getAlternatives() {
+        return this.alternatives;
+    }
+    
     public int getTimeSlotID() {
         return this.timeSlotID;
     }

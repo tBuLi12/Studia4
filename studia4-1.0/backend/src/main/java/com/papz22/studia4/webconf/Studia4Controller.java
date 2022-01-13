@@ -19,7 +19,9 @@ import com.papz22.studia4.utility.jdbc.QueriesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,7 +54,8 @@ public class Studia4Controller {
     }
 
     @GetMapping("/classes")
-    ArrayList<Classes> getClasses(Authentication auth) {
+    ArrayList<Classes> getClasses(Authentication auth, @RequestParam(required = false) String flag) {
+        
         ArrayList<Classes> lectures = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         params.add(auth.getName());
@@ -67,6 +70,24 @@ public class Studia4Controller {
                 lecture.setWeek_day(rs.getString("week_day"));
                 lecture.setTimeSlotID(rs.getInt("time_slot_id"));
                 lectures.add(lecture);
+                Integer id = lecture.getId();
+                if(flag != null)
+                {
+                ArrayList<String> sub_params = new ArrayList<>();
+                sub_params.add(id.toString());
+                try (ResultSet rs_sub = connection.getQueryResult(QueriesMapper.ALTERNATIVES, sub_params);){
+                    Alternative alt;
+                    while (rs_sub.next()) {
+                        alt = new Alternative();
+                        alt.setTimeSlot(rs_sub.getString("time_slot"));
+                        alt.setWeekDay(rs_sub.getString("week_day"));
+                        lecture.getAlternatives().add(alt);
+                    }
+                    rs_sub.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                }
             }
             rs.close();
         } catch (SQLException e) {
@@ -75,31 +96,31 @@ public class Studia4Controller {
         return lectures;
     }
 
-    @GetMapping("/alternatives")
-    ArrayList<Alternative> getAlternatives(@RequestParam String id) {
-        ArrayList<Alternative> alts = new ArrayList<>();
-        ArrayList<String> params = new ArrayList<>();
-        try
-        {
-            ParametersValidator.isInteger(id);
-            params.add(id);
-            try (ResultSet rs = connection.getQueryResult(QueriesMapper.ALTERNATIVES, params);){
-                Alternative alt;
-                while (rs.next()) {
-                    alt = new Alternative();
-                    alt.setTimeSlot(rs.getString("time_slot"));
-                    alt.setWeekDay(rs.getString("week_day"));
-                    alts.add(alt);
-                }
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch(InvalidGetParameterException e) {
-            e.printStackTrace();
-        }
-        return alts;
-    }
+    // @GetMapping("/alternatives")
+    // ArrayList<Alternative> getAlternatives(@RequestParam String id) {
+    //     ArrayList<Alternative> alts = new ArrayList<>();
+    //     ArrayList<String> params = new ArrayList<>();
+    //     try
+    //     {
+    //         ParametersValidator.isInteger(id);
+    //         params.add(id);
+    //         try (ResultSet rs = connection.getQueryResult(QueriesMapper.ALTERNATIVES, params);){
+    //             Alternative alt;
+    //             while (rs.next()) {
+    //                 alt = new Alternative();
+    //                 alt.setTimeSlot(rs.getString("time_slot"));
+    //                 alt.setWeekDay(rs.getString("week_day"));
+    //                 alts.add(alt);
+    //             }
+    //             rs.close();
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //         }
+    //     } catch(InvalidGetParameterException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return alts;
+    // }
 
 
 
@@ -159,4 +180,95 @@ public class Studia4Controller {
         }
         return requests;
     }
+
+    @PostMapping("set-poll-rating")
+    void setPollRatings(Authentication auth, @RequestParam String slotID, @RequestParam String pollID) 
+    {
+        ArrayList<String> params = new ArrayList<>();
+        params.add(auth.getName());
+        try
+        {
+            ParametersValidator.isInteger(slotID);
+            ParametersValidator.isInteger(pollID);
+            params.add(slotID);
+            params.add(pollID);
+            try {
+                connection.executeUpdateOrDelete(QueriesMapper.SET_POLL_RATING, params);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch(InvalidGetParameterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("add-slot-to-poll")
+    void addPollRatings(@RequestParam String slotID, @RequestParam String pollID) 
+    {
+        ArrayList<String> params = new ArrayList<>();
+        try
+        {
+            ParametersValidator.isInteger(slotID);
+            ParametersValidator.isInteger(pollID);
+            params.add(slotID);
+            params.add(pollID);
+            try {
+                connection.executeUpdateOrDelete(QueriesMapper.ADD_SLOT_TO_POLL, params);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch(InvalidGetParameterException e) {
+            e.printStackTrace();
+        }
+    }    
+
+    @PostMapping("delte-poll")
+    void deletePoll(@RequestParam String pollID) 
+    {
+        ArrayList<String> params = new ArrayList<>();
+        try
+        {
+            ParametersValidator.isInteger(pollID);
+            params.add(pollID);
+            try {
+                connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL, params);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch(InvalidGetParameterException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @PostMapping("add-poll")
+    void addPoll(Authentication authentication, @RequestPart String pollName) 
+    {
+        System.out.println(pollName);
+        String username = authentication.getName();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(username);
+        params.add(pollName);
+            try {
+                connection.executeUpdateOrDelete(QueriesMapper.ADD_POLL, params);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+    }
+
+    // @PostMapping("set-ratings")
+    // void setRatings(Authentication authentication, @RequestPart String slot, @RequestPart String rating) 
+    // {
+    //     System.out.println(pollName);
+    //     String username = authentication.getName();
+    //     ArrayList<String> params = new ArrayList<>();
+    //     params.add(username);
+    //     params.add(pollName);
+    //         try {
+    //             connection.executeUpdateOrDelete(QueriesMapper.ADD_POLL, params);
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //         }
+    // }
+
+
 }

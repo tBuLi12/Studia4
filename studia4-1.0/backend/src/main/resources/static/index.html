@@ -1,23 +1,22 @@
 <head>
     <script>
-        const urlStr = "http://" + document.location.host + "/login";
-        const url = new URL(urlStr);
-        const lgUrl = new URL("http://" + document.location.host + "/logged");
-        data = new FormData();
-        data.append("username", "student");
-        data.append("password", "admin");
-        fetch(url, {
-            method: 'POST',
-            body: data
-        }).then(res => res.text())
-            .then(txt => alert(`Response: ${txt}, url: ${urlStr}`))
-            .then(() => fetch(lgUrl))
-            // .then(res => res.text())
-            // .then(txt => alert(txt));
-            .then(res => res.json())
-            .then(({ username, security, position }) => alert(`Username: ${username}, sec: ${security}, pos: ${position}`));
+        const data = new FormData();
+        data.append("pollName", "JeremiToDaun");
+        // so on...
+
+        const reqName = "add-poll";
+
+
+        const loginData = new FormData();
+        loginData.append("username", "admin");
+        loginData.append("password", "admin");
+        fetch("http://" + document.location.host + "/login", {method: 'POST', body: loginData})
+            .then(res => res.text())
+            .then(() => fetch("http://" + document.location.host + "/" + reqName, {method: "POST", body: data}))
+            .then(res => res.text())
+            .then(alert);
     </script>
 </head>
 <body>
-    dupa
+    dupppa
 </body>

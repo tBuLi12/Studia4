@@ -19,16 +19,16 @@ public enum QueriesMapper {
         + "AND S.person = Stud_sbj.student "
         + "AND Stud_sbj.subject = Sbj.subject_id"),
 
-        CHANGE_REQUEST("SELECT Cl.id_classes"
-        + "FROM Classes Cl, (SELECT subject, class_type FROM Classes WHERE id_classes = '?') current_class "
-        + "WHERE Cl.subject = current_class.subject AND Cl.class_type = current_class.class_type"),
+        // CHANGE_REQUEST("SELECT Cl.id_classes "
+        // + "FROM Classes Cl, (SELECT subject, class_type FROM Classes WHERE id_classes = '?') current_class "
+        // + "WHERE Cl.subject = current_class.subject AND Cl.class_type = current_class.class_type"),
 
         CURRENT_CLASS("SELECT req.old_classes_id, req.new_classes_id "
         + "FROM request_change_group req "
         + "WHERE req.student LIKE '?'"),
 
         GET_PESEL("SELECT person FROM Users WHERE username = '?'"),
-
+//delete req
         DELETE_REQUEST_CHANGE_GROUP("DELETE FROM request_change_group req WHERE req.request_id = ?"),
 
         REQUESTS("SELECT req.request_id, sub.name, cl.class_type, req.student, ts.week_day, ts.time_slot_id "
@@ -40,7 +40,7 @@ public enum QueriesMapper {
         +"WHERE usr.username = '?'"),
 
         ADD_RESCHEDULE("INSERT INTO request_change_group VALUES (NULL, '?', ?, ?);"),
-
+// aprove req
         RESCHEDULE("UPDATE stud_classes "
         +"SET id_classes = (SELECT new_classes_id FROM request_change_group WHERE request_id = ?) "
         +"WHERE student = (SELECT student FROM request_change_group WHERE request_id = ?) "
@@ -57,7 +57,7 @@ public enum QueriesMapper {
         +"JOIN Time_slots_ratings tsr on usr.person = tsr.student "
         +"WHERE usr.username = '?'"),
 
-        SET_RATINGS("INSERT INTO Time_slots_ratings VALUES((Select person FROM Users WHERE username = '?'), ?, ?)"),
+        SET_RATING("INSERT INTO Time_slots_ratings VALUES((Select person FROM Users WHERE username = '?'), ?, ?)"),
 
         ADD_POLL("INSERT INTO Polls VALUES (NULL, (Select person FROM Users WHERE username = '?'), '?')"),
 

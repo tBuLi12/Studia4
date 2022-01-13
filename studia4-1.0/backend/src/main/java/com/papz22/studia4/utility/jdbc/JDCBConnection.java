@@ -28,7 +28,7 @@ public class JDCBConnection {
         if (paramsCount != (int) questionmarkCount) throw new NotMatchingParameterException();
         for (String param : params)
         {
-            query = query.replace("?", param);
+            query = query.replaceFirst("[?]", param);
         }
         System.out.println("==============================");
         System.out.println(query);
