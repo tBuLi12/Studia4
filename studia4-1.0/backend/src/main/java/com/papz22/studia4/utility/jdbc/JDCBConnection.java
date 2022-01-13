@@ -57,5 +57,7 @@ public class JDCBConnection {
         Connection con = DataSourceConfig.getConnection();
         PreparedStatement pst = con.prepareStatement(mapParametersToQuery(queryToString(query), params));
         pst.executeUpdate();
+        pst.close();
+        con.close();
     }
 }

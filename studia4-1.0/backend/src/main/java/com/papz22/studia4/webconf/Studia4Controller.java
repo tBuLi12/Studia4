@@ -19,10 +19,10 @@ import com.papz22.studia4.utility.jdbc.QueriesMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -217,22 +217,24 @@ public class Studia4Controller {
     }
     
     @PostMapping("/add-poll")
-    void addPoll(Authentication authentication, @RequestPart String pollName, @RequestPart ArrayList<String> timeSlots) 
+    void addPoll(@RequestParam String name, @RequestParam ArrayList<String> slots) 
     {
-        System.out.println(pollName);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(name);
         String username = authentication.getName();
         ArrayList<String> params = new ArrayList<>();
         params.add(username);
-        params.add(pollName);
+        params.add(name);
         try {
             // adds new table with username and pollname - generates incremently id
             connection.executeUpdateOrDelete(QueriesMapper.ADD_POLL, params);
             ResultSet rs = connection.getQueryResut(QueriesMapper.GET_MAX_POLL_ID);
             // generated poll id 
+            rs.next();
             String maxPollId = rs.getString("MAX");
             rs.close();
             ArrayList<String> subParams;
-            for(String slot : timeSlots)
+            for(String slot : slots)
             {
                 // for every time slot add new time slot matching with id
                 subParams = new ArrayList<>();
