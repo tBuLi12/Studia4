@@ -34,6 +34,7 @@ public class JDCBConnection {
         {
             query = query.replaceFirst("[?]", param);
         }
+        //TODO add some descent logger to app
         System.out.println("==============================");
         System.out.println(query);
         System.out.println("==============================");
