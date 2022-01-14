@@ -46,21 +46,13 @@ public class HashCalculator implements PasswordEncoder{
     @Override
     public String encode(CharSequence text)
     {
-        // String text2 = "admin";
-        // System.out.println("entered encoder");
-        // System.out.println(text.toString());
         byte[] hashbytes = digest.digest(text.toString().getBytes(StandardCharsets.UTF_8));
         String result = bytesToHex(hashbytes); 
-        // System.out.println(result);
         return result;
     }
     @Override
     public boolean matches(CharSequence plainTextPassword, String passwordInDatabase)
     {
-        System.out.println("matches entered");
-        // System.out.println(encode(plainTextPassword));
-        // System.out.println(passwordInDatabase);
-        System.out.println(encode(plainTextPassword).matches(passwordInDatabase));
         return encode(plainTextPassword).matches(passwordInDatabase);
     }
 }

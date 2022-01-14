@@ -12,6 +12,15 @@ public enum QueriesMapper {
         + "inner join time_slots ts on ts.time_slot_id = cl.time_slot_id "
         + "where usr.username like '?'"),
 
+        ALL_CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id "
+        + "FROM Users usr "
+        + "inner join Student s on s.person = usr.person "
+        + "inner join Stud_classes st_cl on st_cl.student = s.person "
+        + "inner join Classes cl on cl.id_classes = st_cl.id_classes "
+        + "inner join Subject sub on sub.subject_id = cl.subject "
+        + "inner join Classroom cr on cr.room_id = cl.class_room "
+        + "inner join time_slots ts on ts.time_slot_id = cl.time_slot_id "),
+
         COURSES("SELECT Sbj.subject_id as sbj_subject_id, Sbj.name as sbj_name "
         + "FROM Users usr, Student S, Subject Sbj, Stud_subjects Stud_sbj "
         + "WHERE usr.username like '?' "
@@ -84,6 +93,12 @@ public enum QueriesMapper {
         +"GROUP BY pt.slot_id"),
 
         FETCH_POLLS("SELECT poll_name, poll_id FROM polls WHERE createor_id = (SELECT person FROM users WHERE username = '?')"),
+
+        FETCH_INTERSECT("SELECT time_slot_id FROM time_slots "
+        +"MINUS "
+        +"SELECT DISTINCT time_slot_id FROM "
+        +"(SELECT id_classes FROM stud_classes WHERE student IN (SELECT student FROM stud_classes WHERE id_classes IN (?))) "
+        +"JOIN classes USING (id_classes)"),
 
         ALTERNATIVES("SELECT ts.week_day, ts.time_slot "
         + "FROM (SELECT subject, class_type FROM Classes WHERE id_classes = ?) current_class, Classes Cl "

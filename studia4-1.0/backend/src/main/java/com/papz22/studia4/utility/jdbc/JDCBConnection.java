@@ -34,6 +34,23 @@ public class JDCBConnection {
         {
             query = query.replaceFirst("[?]", param);
         }
+        //TODO add some descent logger to app
+        System.out.println("==============================");
+        System.out.println(query);
+        System.out.println("==============================");
+        return query;
+    }
+
+    private String mapInParametersToQuery(String query, ArrayList<String> params)
+    {
+        StringBuilder inParams = new StringBuilder();
+        for (String param : params)
+        {
+            inParams.append(param + ", ");
+        }
+        String resultIn = inParams.toString().trim();
+        resultIn = resultIn.substring(0, resultIn.length() - 1);
+        query = query.replace("?", resultIn);
         System.out.println("==============================");
         System.out.println(query);
         System.out.println("==============================");
@@ -51,6 +68,13 @@ public class JDCBConnection {
     public ResultSet getQueryResult(QueriesMapper query, ArrayList<String> params) throws SQLException
     {
         PreparedStatement pst = connection.prepareStatement(mapParametersToQuery(queryToString(query), params));
+        ResultSet rs = pst.executeQuery();
+        return rs;
+    }
+
+    public ResultSet getListQueryResultSet(QueriesMapper query, ArrayList<String> params) throws SQLException
+    {
+        PreparedStatement pst = connection.prepareStatement(mapInParametersToQuery(queryToString(query), params));
         ResultSet rs = pst.executeQuery();
         return rs;
     }

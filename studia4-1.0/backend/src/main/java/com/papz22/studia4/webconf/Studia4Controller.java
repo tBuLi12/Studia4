@@ -59,15 +59,18 @@ public class Studia4Controller {
     }
 
     @GetMapping("/classes")
-    @Transactional
     ArrayList<Classes> getClasses(Authentication auth, @RequestParam(required = false) String flag) {
-        
         ArrayList<Classes> lectures = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
+        QueriesMapper query = QueriesMapper.ALL_CLASSES;
+        if(!flag.equals("all")){
         params.add(auth.getName());
+        query = QueriesMapper.CLASSES;
+        }
+        //TODO get everything in one try catch block
         try {
             JDCBConnection connection = new JDCBConnection();
-            ResultSet rs = connection.getQueryResult(QueriesMapper.CLASSES, params);
+            ResultSet rs = (!flag.equals("all")) ? connection.getQueryResult(query, params) : connection.getQueryResut(query);
             Classes lecture;
             while (rs.next()) {
                 lecture = new Classes();
@@ -84,7 +87,7 @@ public class Studia4Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(flag != null)
+        if(flag.equals("alts"))
                 {
                     for (Classes lec : lectures){
                 Integer id = lec.getId();
@@ -310,20 +313,23 @@ public class Studia4Controller {
     }
 
 
-    // @PostMapping("set-ratings")
-    // void setRatings(Authentication authentication, @RequestPart String slot, @RequestPart String rating) 
-    // {
-    //     System.out.println(pollName);
-    //     String username = authentication.getName();
-    //     ArrayList<String> params = new ArrayList<>();
-    //     params.add(username);
-    //     params.add(pollName);
-    //         try {
-    //             connection.executeUpdateOrDelete(QueriesMapper.ADD_POLL, params);
-    //         } catch (SQLException e) {
-    //             e.printStackTrace();
-    //         }
-    // }
+    @PostMapping("intersect")
+    ArrayList<String> postIntersect(@RequestParam ArrayList<String> classIDs)
+    {
+        ArrayList<String> slotIDs = new ArrayList<>();
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            ResultSet rs = connection.getListQueryResultSet(QueriesMapper.FETCH_INTERSECT, classIDs);
+            while (rs.next()) {
+                slotIDs.add(rs.getString("time_slot_id"));
+            }
+            rs.close();
+            connection.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return slotIDs;
+    }
 
 
 }
