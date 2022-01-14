@@ -63,7 +63,8 @@ public class Studia4Controller {
         ArrayList<Classes> lectures = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         QueriesMapper query = QueriesMapper.ALL_CLASSES;
-        if(!flag.equals("all")){
+        if (flag == null) flag = "";
+        else if(!flag.equals("all")){
         params.add(auth.getName());
         query = QueriesMapper.CLASSES;
         }
@@ -227,7 +228,7 @@ public class Studia4Controller {
     
     @PostMapping("/add-poll")
     @Transactional
-    PollResult addPoll(@RequestParam String name, @RequestParam ArrayList<String> slots) 
+    PollResult addPoll(@RequestParam String name, @RequestParam ArrayList<String> slots, @RequestParam ArrayList<String> classIDs) 
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
