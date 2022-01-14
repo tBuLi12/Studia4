@@ -227,7 +227,7 @@ public class Studia4Controller {
     
     @PostMapping("/add-poll")
     @Transactional
-    void addPoll(@RequestParam String name, @RequestParam ArrayList<String> slots) 
+    PollResult addPoll(@RequestParam String name, @RequestParam ArrayList<String> slots) 
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -235,6 +235,7 @@ public class Studia4Controller {
         params.add(username);
         params.add(name);
         String maxPollId = "";
+        int  maxPollIdInt = 0;
         try {
             JDCBConnection connection = new JDCBConnection();
             // adds new table with username and pollname - generates incremently id
@@ -243,6 +244,7 @@ public class Studia4Controller {
             // generated poll id 
             rs.next();
             maxPollId = rs.getString("MAX");
+            maxPollIdInt = rs.getInt("MAX");
             rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -260,6 +262,10 @@ public class Studia4Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        PollResult result = new PollResult();
+        result.setPollID(maxPollIdInt);
+        result.setPollName(name);
+        return result;
     }
 
 
