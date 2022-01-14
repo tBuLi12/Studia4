@@ -60,7 +60,6 @@ public class Studia4Controller {
 
     @GetMapping("/classes")
     ArrayList<Classes> getClasses(Authentication auth, @RequestParam(required = false) String flag) {
-        System.out.println(flag);
         ArrayList<Classes> lectures = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         QueriesMapper query = QueriesMapper.ALL_CLASSES;
