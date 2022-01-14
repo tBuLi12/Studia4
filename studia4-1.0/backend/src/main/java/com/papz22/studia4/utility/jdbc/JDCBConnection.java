@@ -40,6 +40,20 @@ public class JDCBConnection {
         return query;
     }
 
+    private String mapInParametersToQuery(String query, ArrayList<String> params)
+    {
+        StringBuilder inParams = new StringBuilder();
+        for (String param : params)
+        {
+            inParams.append(param + " ");
+        }
+        query = query.replace("?", inParams.toString().trim());
+        System.out.println("==============================");
+        System.out.println(query);
+        System.out.println("==============================");
+        return query;
+    }
+
     public ResultSet getQueryResut(QueriesMapper query) throws SQLException
     {
         
@@ -51,6 +65,13 @@ public class JDCBConnection {
     public ResultSet getQueryResult(QueriesMapper query, ArrayList<String> params) throws SQLException
     {
         PreparedStatement pst = connection.prepareStatement(mapParametersToQuery(queryToString(query), params));
+        ResultSet rs = pst.executeQuery();
+        return rs;
+    }
+
+    public ResultSet getListQueryResultSet(QueriesMapper query, ArrayList<String> params) throws SQLException
+    {
+        PreparedStatement pst = connection.prepareStatement(mapInParametersToQuery(queryToString(query), params));
         ResultSet rs = pst.executeQuery();
         return rs;
     }
