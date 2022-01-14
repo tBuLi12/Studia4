@@ -47,7 +47,8 @@ public class JDCBConnection {
         {
             inParams.append(param + ", ");
         }
-        String resultIn = inParams.toString().trim().substring(0, inParams.length() - 1);
+        String resultIn = inParams.toString().trim();
+        resultIn = resultIn.substring(0, resultIn.length() - 1);
         query = query.replace("?", resultIn);
         System.out.println("==============================");
         System.out.println(query);
