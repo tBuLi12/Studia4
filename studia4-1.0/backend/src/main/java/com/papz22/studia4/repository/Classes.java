@@ -18,13 +18,13 @@ public class Classes
     private String class_type;
     private String roomNumber;
     private int timeSlotID;
-    private ArrayList<Alternative> alternatives = new ArrayList<>();
+    private ArrayList<Integer> alternatives = new ArrayList<>();
 
     public Classes(){}
 
 
 
-    public ArrayList<Alternative> getAlternatives() {
+    public ArrayList<Integer> getAlternatives() {
         return this.alternatives;
     }
     

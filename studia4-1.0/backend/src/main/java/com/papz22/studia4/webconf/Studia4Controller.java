@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.papz22.studia4.repository.Alternative;
 import com.papz22.studia4.repository.ChangeRequest;
 import com.papz22.studia4.repository.Classes;
 import com.papz22.studia4.repository.PollResult;
@@ -97,12 +96,8 @@ public class Studia4Controller {
                 try {
                     JDCBConnection connection = new JDCBConnection();
                     ResultSet rs_sub = connection.getQueryResult(QueriesMapper.ALTERNATIVES, sub_params);
-                    Alternative alt;
                     while (rs_sub.next()) {
-                        alt = new Alternative();
-                        alt.setTimeSlot(rs_sub.getString("time_slot"));
-                        alt.setWeekDay(rs_sub.getString("week_day"));
-                        lec.getAlternatives().add(alt);
+                        lec.getAlternatives().add(rs_sub.getInt("time_slot_id"));
                     }
                     rs_sub.close();
                     connection.closeConnection();
