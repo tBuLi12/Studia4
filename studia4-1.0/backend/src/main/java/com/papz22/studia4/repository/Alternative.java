@@ -1,26 +1,29 @@
 package com.papz22.studia4.repository;
 
 public class Alternative {
-    private String weekDay;
-    private String timeSlot;
+    private String timeSlotID;
+    private String classID;
 
     public Alternative() {
     }
 
-    public String getWeekDay() {
-        return this.weekDay;
+
+    public String getTimeSlotID() {
+        return this.timeSlotID;
     }
 
-    public void setWeekDay(String weekDay) {
-        this.weekDay = weekDay;
+    public void setTimeSlotID(String timeSlotID) {
+        this.timeSlotID = timeSlotID;
     }
 
-    public String getTimeSlot() {
-        return this.timeSlot;
+    public String getClassID() {
+        return this.classID;
     }
 
-    public void setTimeSlot(String timeSlot) {
-        this.timeSlot = timeSlot;
+    public void setClassID(String classID) {
+        this.classID = classID;
     }
+
+    
 
 }
