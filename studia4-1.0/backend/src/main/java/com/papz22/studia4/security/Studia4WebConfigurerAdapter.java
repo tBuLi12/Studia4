@@ -44,6 +44,7 @@ public class Studia4WebConfigurerAdapter extends WebSecurityConfigurerAdapter
               .permitAll()
               .and()
           .logout()
+          .deleteCookies("auth_code", "JSESSIONID")
               .permitAll()
               .and()
               .httpBasic()
