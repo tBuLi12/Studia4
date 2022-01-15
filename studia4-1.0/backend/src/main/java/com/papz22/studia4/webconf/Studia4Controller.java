@@ -320,7 +320,7 @@ public class Studia4Controller {
     }
 
 
-    @PostMapping("intersect")
+    @PostMapping("/intersect")
     ArrayList<String> postIntersect(@RequestParam ArrayList<String> classIDs)
     {
         ArrayList<String> slotIDs = new ArrayList<>();
@@ -338,5 +338,31 @@ public class Studia4Controller {
         return slotIDs;
     }
 
+    @PostMapping("/add-reschedule")
+    void addReschedule(@RequestParam Map<String, String> changes) 
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<String> params;
+        try
+        {
+            //TODO getQueryResultSet with String Param
+            JDCBConnection connection = new JDCBConnection();
+            String pesel = extractor.extract(authentication);
+            for (String key : changes.keySet())
+            {
+                ParametersValidator.isInteger(key);
+                ParametersValidator.isInteger(changes.get(key));
+                params = new ArrayList<String>();
+                params.add(pesel);
+                params.add(key);
+                params.add(changes.get(key));
+                connection.executeUpdateOrDelete(QueriesMapper.ADD_RESCHEDULE, params);
+            }
+        } catch(InvalidGetParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
