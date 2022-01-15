@@ -24,6 +24,7 @@ public class PeselExtractor
             result = connection.getQueryResult(QueriesMapper.GET_PESEL, params);
             pesel = result.getString("person");
             result.close();
+            connection.closeConnection();
         }catch(SQLException e){
             e.printStackTrace();
         }
