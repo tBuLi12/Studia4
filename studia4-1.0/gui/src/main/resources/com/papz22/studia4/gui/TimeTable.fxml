@@ -47,7 +47,6 @@
             <Pane id="ValuePane" fx:id="Pane12" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Pane id="ValuePane" fx:id="Pane13" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Pane id="ValuePane" fx:id="Pane22" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Pane id="ValuePane" fx:id="Pane23" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
             <Pane id="ValuePane" fx:id="Pane24" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <Pane id="ValuePane" fx:id="Pane25" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
             <Pane id="ValuePane" fx:id="Pane31" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -126,6 +125,7 @@
                   <Label alignment="CENTER" layoutY="5.0" prefHeight="0.0" prefWidth="91.0" text="18:15-20:00" />
                </children>
             </Pane>
+            <Button id="ValuePane" mnemonicParsing="false" onAction="#show_subject" prefHeight="34.0" prefWidth="112.0" text="WSI" GridPane.columnIndex="3" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

@@ -1,16 +1,31 @@
 package com.papz22.studia4.gui;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
+
+
+
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -65,33 +80,25 @@ public class LoginController{
 		String username = LoginTextField.getText();
 		String password = PasswordTextField.getText();
 		
-		if(username.equals("a") && password.equals("a")) {
-			
-			// URL url = new URL("papz22.tplinkdns.com:2137/login");
-			// URLConnection con = url.openConnection();
-			// HttpURLConnection http = (HttpURLConnection)con;
-			// http.setRequestMethod("POST"); // PUT is another valid option
-			// http.setDoOutput(true);
-			
-			// Map<String,String> arguments = new HashMap<>();
-			// arguments.put("username", "student");
-			// arguments.put("password", "admin");
-			// StringJoiner sj = new StringJoiner("&");
-			// for(Map.Entry<String,String> entry : arguments.entrySet())
-			//     sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" 
-			//          + URLEncoder.encode(entry.getValue(), "UTF-8"));
-			// byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
-			// int length = out.length;
-			
-			// http.setFixedLengthStreamingMode(length);
-			// http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-			// http.connect();
-			// try(OutputStream os = http.getOutputStream()) {
-			//     os.write(out);
-			// }
-			
-			
-			
+		URL url = new URL("http://localhost:3000/login");
+		HttpURLConnection http = (HttpURLConnection)url.openConnection();
+		http.setRequestMethod("POST");
+		http.setDoOutput(true);
+		http.setRequestProperty("Authorization", "Basic YXZha2phbkBtYWlsLnJ1OnNhc2Fz");
+		http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		
+		String data = String.format("username=%s&password=%s", username, password);
+		
+		byte[] out = data.getBytes(StandardCharsets.UTF_8);
+		
+		OutputStream stream = http.getOutputStream();
+		stream.write(out);
+		
+		int code = http.getResponseCode();
+		System.out.println(code + " " + http.getResponseMessage());
+		http.disconnect();
+
+		if (code == 302){
 			scene = BackAnchorPane.getScene();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Studia.fxml"));	
 			root = loader.load();
@@ -109,6 +116,9 @@ public class LoginController{
 			scene.getStylesheets().add(css); // lepszy zapis jak mamy wiele scene
 			
 			stage.show();
+		}
+		else{
+			System.out.println("Dupa nie wejdziesz dzisiaj!");
 		}
 	}
 	

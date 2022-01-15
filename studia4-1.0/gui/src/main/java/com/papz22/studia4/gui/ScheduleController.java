@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -114,7 +115,29 @@ public class ScheduleController {
 		stage.show();
 	}
 
-	
-	
+	public void show_subject(ActionEvent event) throws IOException {
+		Button butt = (Button)event.getSource();
+		System.out.println(butt.getText());
+		// go_to_subject(butt.getText(), event);
+		
+	}
+	// public void go_to_subject(String subject_name, ActionEvent event){
+
+	// 	FXMLLoader loader = new FXMLLoader(getClass().getResource("subjectPage.fxml"));	
+	// 	root = loader.load();
+		
+	// 	SubjectPageController pageController = loader.getController();
+	// 	pageController.set_Theme(Theme);
+
+	// 	stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+	// 	scene = new Scene(root);
+	// 	stage.setScene(scene);
+
+	// 	String css = this.getClass().getResource(Theme).toExternalForm();
+	// 	scene.getStylesheets().add(css);
+		
+	// 	stage.show();
+
+	// }
 	
 }
