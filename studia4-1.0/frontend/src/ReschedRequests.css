@@ -1,0 +1,26 @@
+.box-row > div:first-child {
+    flex-grow: 1;
+}
+
+.request-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.7em;
+    flex-grow: 1;
+}
+
+.box-row > div:last-child {
+    display: flex;
+    align-items: center;
+}
+
+.resched-side-text {
+    font-size: 0.6em;
+}
+
+.request-buttons {
+    align-items: flex-end !important;
+    flex-direction: column;
+    justify-content: space-around;
+}

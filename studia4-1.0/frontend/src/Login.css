@@ -1,0 +1,40 @@
+form input[type="text"], form input[type="password"] {
+    font-size: 1em;
+    height: 1.8em;
+    background-color: rgb(255, 240, 243);
+    border-color: rgb(255, 117, 143);
+    border-style: solid;
+    border-width: 0.15em;
+    border-radius: 0.35em;
+}
+
+form .button {
+    font-size: 1em;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: max(0.6em, 20px);
+}
+
+#content > div > form {
+    flex-direction: column;
+}
+
+#content > div > form > .button {
+    margin-top: 0.3em;
+}
+
+form input[type="password"] {
+    margin-top: 0.4em;
+}
+
+form input[type="text"]:focus, form input[type="password"]:focus {
+    outline-width: 0.15em;
+    outline-color: rgb(201, 24, 74);
+    outline-style: solid;
+    background-color: rgb(253, 226, 231);
+    box-shadow: 0 0 1.2em rgb(206, 29, 79);
+}
