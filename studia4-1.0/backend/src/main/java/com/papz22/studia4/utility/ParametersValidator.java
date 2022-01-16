@@ -1,6 +1,6 @@
 package com.papz22.studia4.utility;
 
-import com.papz22.studia4.utility.exception.InvalidGetParameterException;
+import com.papz22.studia4.utility.exception.InvalidRequestParameterException;
 
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ParametersValidator {
     ParametersValidator(){}
 
-    public static void isInteger(String str) throws InvalidGetParameterException{
+    public static void isInteger(String str) throws InvalidRequestParameterException{
         boolean result = true;
         if (str == null) {
             result = false;
@@ -30,7 +30,7 @@ public class ParametersValidator {
                 result = false;
             }
         }
-        if(!result) throw new InvalidGetParameterException("Parameter must be a number!");
+        if(!result) throw new InvalidRequestParameterException("Parameter must be a number!");
     }
     
 }

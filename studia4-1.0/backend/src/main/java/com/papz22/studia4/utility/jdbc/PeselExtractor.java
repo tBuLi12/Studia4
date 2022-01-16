@@ -22,6 +22,7 @@ public class PeselExtractor
         try{
             JDCBConnection connection = new JDCBConnection();
             result = connection.getQueryResult(QueriesMapper.GET_PESEL, params);
+            result.next();
             pesel = result.getString("person");
             result.close();
             connection.closeConnection();

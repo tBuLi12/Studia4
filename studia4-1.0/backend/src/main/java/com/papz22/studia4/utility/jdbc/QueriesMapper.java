@@ -2,7 +2,7 @@ package com.papz22.studia4.utility.jdbc;
 
 public enum QueriesMapper {
 
-        CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id "
+        CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id, rcg.new_classes_id "
         + "FROM Users usr "
         + "inner join Student s on s.person = usr.person "
         + "inner join Stud_classes st_cl on st_cl.student = s.person "
@@ -10,6 +10,7 @@ public enum QueriesMapper {
         + "inner join Subject sub on sub.subject_id = cl.subject "
         + "inner join Classroom cr on cr.room_id = cl.class_room "
         + "inner join time_slots ts on ts.time_slot_id = cl.time_slot_id "
+        + "left join request_change_group rcg on rcg.student = usr.person AND cl.id_classes = rcg.old_classes_id "
         + "where usr.username like '?'"),
 
         ALL_CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id "
@@ -20,6 +21,8 @@ public enum QueriesMapper {
         + "inner join Subject sub on sub.subject_id = cl.subject "
         + "inner join Classroom cr on cr.room_id = cl.class_room "
         + "inner join time_slots ts on ts.time_slot_id = cl.time_slot_id "),
+
+        DELETE_CHAMGE_GROUP_REQUEST("DELETE FROM request_change_group WHERE student = '?' AND old_classes_id = ?"),
 
         COURSES("SELECT Sbj.subject_id as sbj_subject_id, Sbj.name as sbj_name "
         + "FROM Users usr, Student S, Subject Sbj, Stud_subjects Stud_sbj "
@@ -48,7 +51,7 @@ public enum QueriesMapper {
         + "JOIN Time_slots ts on ts.time_slot_id = cl.time_slot_id "
         + "WHERE usr.username = '?'"),
 
-        ADD_RESCHEDULE("INSERT INTO request_change_group VALUES (NULL, '?', ?, ?);"),
+        ADD_RESCHEDULE("INSERT INTO request_change_group VALUES (NULL, '?', ?, ?)"),
 // aprove req
         RESCHEDULE("UPDATE stud_classes "
         + "SET id_classes = (SELECT new_classes_id FROM request_change_group WHERE request_id = ?) "

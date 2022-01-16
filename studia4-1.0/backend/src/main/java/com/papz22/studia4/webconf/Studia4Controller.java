@@ -12,7 +12,7 @@ import com.papz22.studia4.repository.Classes;
 import com.papz22.studia4.repository.PollResult;
 import com.papz22.studia4.repository.UniSubject;
 import com.papz22.studia4.utility.ParametersValidator;
-import com.papz22.studia4.utility.exception.InvalidGetParameterException;
+import com.papz22.studia4.utility.exception.InvalidRequestParameterException;
 import com.papz22.studia4.utility.jdbc.JDCBConnection;
 import com.papz22.studia4.utility.jdbc.PeselExtractor;
 import com.papz22.studia4.utility.jdbc.QueriesMapper;
@@ -29,8 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Studia4Controller {
 
-    // @Autowired
-    // JDCBConnection connection;
 
     @Autowired
     PeselExtractor extractor;
@@ -63,8 +61,8 @@ public class Studia4Controller {
         ArrayList<Classes> lectures = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
         QueriesMapper query = QueriesMapper.ALL_CLASSES;
-        if (flag == null) flag = "";
-        else if(!flag.equals("all")){
+        if (flag == null) flag = "empty";
+        if(!flag.equals("all")){
         params.add(auth.getName());
         query = QueriesMapper.CLASSES;
         }
@@ -81,6 +79,10 @@ public class Studia4Controller {
                 lecture.setRoomNumber(rs.getString("room_nr"));
                 lecture.setWeek_day(rs.getString("week_day"));
                 lecture.setTimeSlotID(rs.getInt("time_slot_id"));
+                if(!query.getQuery().matches(QueriesMapper.ALL_CLASSES.getQuery())){
+                String request = rs.getString("new_classes_id");
+                lecture.setRequestedTimeSlotID(request);
+                }
                 lectures.add(lecture);
             }
             rs.close();
@@ -130,12 +132,6 @@ public class Studia4Controller {
         credentials.put("position", workGroup);
         return credentials;
     }
-
-    // @GetMapping("/build-schedule")
-    // void buildSchedule()
-    // {
-
-    // }
 
     @GetMapping("/delete")
     void delete(@RequestParam String id){
@@ -198,7 +194,7 @@ public class Studia4Controller {
                 connection.executeUpdateOrDelete(QueriesMapper.INSERT_POLL_RATING, params);
         }
             connection.closeConnection();
-        } catch(InvalidGetParameterException e) {
+        } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
         } catch(SQLException e) {
             e.printStackTrace();
@@ -219,7 +215,7 @@ public class Studia4Controller {
             connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL_TIME, params);
             connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL, params);
             connection.closeConnection();
-        } catch(InvalidGetParameterException e) {
+        } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
         } catch(SQLException e) {
             e.printStackTrace();
@@ -339,7 +335,7 @@ public class Studia4Controller {
     }
 
     @PostMapping("/add-reschedule")
-    void addReschedule(@RequestParam Map<String, String> changes) 
+    void addReschedule(@RequestParam ArrayList<String> froms, @RequestParam ArrayList<String> tos) 
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         ArrayList<String> params;
@@ -348,17 +344,19 @@ public class Studia4Controller {
             //TODO getQueryResultSet with String Param
             JDCBConnection connection = new JDCBConnection();
             String pesel = extractor.extract(authentication);
-            for (String key : changes.keySet())
+            for (int i = 0; i < froms.size(); i++)
             {
-                ParametersValidator.isInteger(key);
-                ParametersValidator.isInteger(changes.get(key));
+                if (froms.size() != tos.size()) throw new InvalidRequestParameterException("Correlated params lists sizes not matching!");
+                ParametersValidator.isInteger(froms.get(i));
+                ParametersValidator.isInteger(tos.get(i));
                 params = new ArrayList<String>();
                 params.add(pesel);
-                params.add(key);
-                params.add(changes.get(key));
+                params.add(froms.get(i));
+                params.add(tos.get(i));
+                connection.executeUpdateOrDelete(QueriesMapper.DELETE_CHAMGE_GROUP_REQUEST, new ArrayList<String>(params.subList(0, 2)));
                 connection.executeUpdateOrDelete(QueriesMapper.ADD_RESCHEDULE, params);
             }
-        } catch(InvalidGetParameterException e) {
+        } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
         } catch(SQLException e) {
             e.printStackTrace();

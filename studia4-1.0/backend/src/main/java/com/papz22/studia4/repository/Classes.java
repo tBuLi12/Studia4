@@ -19,9 +19,21 @@ public class Classes
     private String roomNumber;
     private int timeSlotID;
     private ArrayList<Alternative> alternatives = new ArrayList<>();
+    private String requestedTimeSlotID;
 
     public Classes(){}
 
+    public void setAlternatives(ArrayList<Alternative> alternatives) {
+        this.alternatives = alternatives;
+    }
+
+    public String getRequestedTimeSlotID() {
+        return this.requestedTimeSlotID;
+    }
+
+    public void setRequestedTimeSlotID(String requestedTimeSlotID) {
+        this.requestedTimeSlotID = requestedTimeSlotID;
+    }
 
 
     public ArrayList<Alternative> getAlternatives() {
