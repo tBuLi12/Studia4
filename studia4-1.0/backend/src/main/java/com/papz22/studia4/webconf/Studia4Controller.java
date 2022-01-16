@@ -10,6 +10,7 @@ import com.papz22.studia4.repository.Alternative;
 import com.papz22.studia4.repository.ChangeRequest;
 import com.papz22.studia4.repository.Classes;
 import com.papz22.studia4.repository.PollResult;
+import com.papz22.studia4.repository.Ratings;
 import com.papz22.studia4.repository.UniSubject;
 import com.papz22.studia4.utility.ParametersValidator;
 import com.papz22.studia4.utility.exception.InvalidRequestParameterException;
@@ -354,7 +355,7 @@ public class Studia4Controller {
                 params.add(froms.get(i));
                 params.add(tos.get(i));
                 connection.executeUpdateOrDelete(QueriesMapper.DELETE_CHAMGE_GROUP_REQUEST, new ArrayList<String>(params.subList(0, 2)));
-                connection.executeUpdateOrDelete(QueriesMapper.ADD_RESCHEDULE, params);
+                if (!params.get(1).matches(params.get(2))) connection.executeUpdateOrDelete(QueriesMapper.ADD_RESCHEDULE, params);
             }
         } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
@@ -362,5 +363,69 @@ public class Studia4Controller {
             e.printStackTrace();
         }
     }
+
+
+    @GetMapping("/ratings")
+    ArrayList<Ratings> getRatings(Authentication auth)
+    {
+        ArrayList<Ratings> ratings = new ArrayList<>();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(auth.getName());
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            ResultSet rs = connection.getQueryResult(QueriesMapper.RATINGS, params);
+            Ratings rating;
+            while (rs.next()) {
+                rating = new Ratings();
+                rating.setTimeSlotId(rs.getString("time_slot_id"));
+                rating.setRating("rating");
+                ratings.add(rating);
+            }
+            rs.close();
+            connection.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ratings;
+    }
+
+
+    @PostMapping("/add-ratings")
+    void addRating(@RequestParam ArrayList<String> slotIDs, @RequestParam ArrayList<String> ratings) 
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<String> params;
+        try
+        {
+            //TODO getQueryResultSet with String Param
+            JDCBConnection connection = new JDCBConnection();
+            for (int i = 0; i < slotIDs.size(); i++)
+            {
+                if (slotIDs.size() != ratings.size()) throw new InvalidRequestParameterException("Correlated params lists sizes not matching!");
+                ParametersValidator.isInteger(slotIDs.get(i));
+                ParametersValidator.isInteger(ratings.get(i));
+                params = new ArrayList<String>();
+                params.add(authentication.getName());
+                params.add(slotIDs.get(i));
+                params.add(ratings.get(i));
+                ResultSet rs = connection.getQueryResult(QueriesMapper.CHECK_RATINGS, new ArrayList<String>(params.subList(0, 2)));
+                if (rs.next()) {
+                    // first time added user
+                    ArrayList<String> sub_params = new ArrayList<>();
+                    sub_params.add(ratings.get(i));
+                    sub_params.add(authentication.getName());
+                    sub_params.add(slotIDs.get(i));
+                    connection.executeUpdateOrDelete(QueriesMapper.UPDATE_RATING, sub_params);
+                } else {
+                connection.executeUpdateOrDelete(QueriesMapper.ADD_RATING, params);
+                }
+            }
+        } catch(InvalidRequestParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

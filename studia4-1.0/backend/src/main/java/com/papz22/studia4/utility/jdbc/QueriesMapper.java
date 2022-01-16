@@ -2,7 +2,7 @@ package com.papz22.studia4.utility.jdbc;
 
 public enum QueriesMapper {
 
-        CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id, cl2.time_slot_id as new_classes_id "
+        CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id, cl2.time_slot_id new_time_slot_id "
         + "FROM Users usr "
         + "inner join Student s on s.person = usr.person "
         + "inner join Stud_classes st_cl on st_cl.student = s.person "
@@ -10,8 +10,7 @@ public enum QueriesMapper {
         + "inner join Subject sub on sub.subject_id = cl.subject "
         + "inner join Classroom cr on cr.room_id = cl.class_room "
         + "inner join time_slots ts on ts.time_slot_id = cl.time_slot_id "
-        + "left join request_change_group rcg on rcg.student = usr.person AND cl.id_classes = rcg.old_classes_id "
-        + "inner join Classes cl2 on cl2.id_classes = rcg.new_classes_id "
+        + "left join (request_change_group rcg join Classes cl2 on rcg.new_classes_id = cl2.id_classes) on rcg.student = usr.person AND cl.id_classes = rcg.old_classes_id "
         + "where usr.username like '?'"),
 
         ALL_CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id "
@@ -70,7 +69,16 @@ public enum QueriesMapper {
         + "JOIN Time_slots_ratings tsr on usr.person = tsr.student "
         + "WHERE usr.username = '?'"),
 
-        SET_RATING("INSERT INTO Time_slots_ratings VALUES((Select person FROM Users WHERE username = '?'), ?, ?)"),
+        CHECK_RATINGS("SELECT tsr.time_slot_id, tsr.rating "
+        + "FROM Users usr "
+        + "JOIN Time_slots_ratings tsr on usr.person = tsr.student "
+        + "WHERE usr.username = '?' AND tsr.time_slot_id = ?"),
+
+        ADD_RATING("INSERT INTO Time_slots_ratings VALUES((Select person FROM Users WHERE username = '?'), ?, ?)"),
+
+        UPDATE_RATING("UPDATE time_slots_ratings SET rating = ? WHERE student = '?' AND time_slot_id = ?"),
+
+        DELETE_RATING("DELETE from time_slots_ratings WHERE student = '?' AND time_slot_id = ?"),
 
         ADD_POLL("INSERT INTO Polls VALUES (NULL, (Select person FROM Users WHERE username = '?'), '?')"),
 
