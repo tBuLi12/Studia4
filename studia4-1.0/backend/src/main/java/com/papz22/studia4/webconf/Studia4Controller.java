@@ -80,7 +80,7 @@ public class Studia4Controller {
                 lecture.setWeek_day(rs.getString("week_day"));
                 lecture.setTimeSlotID(rs.getInt("time_slot_id"));
                 if(!query.getQuery().matches(QueriesMapper.ALL_CLASSES.getQuery())){
-                String request = rs.getString("new_classes_id");
+                String request = rs.getString("new_time_slot_id");
                 lecture.setRequestedTimeSlotID(request);
                 }
                 lectures.add(lecture);
