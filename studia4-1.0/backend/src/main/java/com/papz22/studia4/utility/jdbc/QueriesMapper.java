@@ -2,7 +2,7 @@ package com.papz22.studia4.utility.jdbc;
 
 public enum QueriesMapper {
 
-        CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id, cl2.time_slot_id "
+        CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id, cl2.time_slot_id new_time_slot_id "
         + "FROM Users usr "
         + "inner join Student s on s.person = usr.person "
         + "inner join Stud_classes st_cl on st_cl.student = s.person "
@@ -10,8 +10,7 @@ public enum QueriesMapper {
         + "inner join Subject sub on sub.subject_id = cl.subject "
         + "inner join Classroom cr on cr.room_id = cl.class_room "
         + "inner join time_slots ts on ts.time_slot_id = cl.time_slot_id "
-        + "left join request_change_group rcg on rcg.student = usr.person AND cl.id_classes = rcg.old_classes_id "
-        + "inner join Classes cl2 on cl2.id_classes = rgc.new_classes_id"
+        + "left join (request_change_group rcg join Classes cl2 on rcg.new_classes_id = cl2.id_classes) on rcg.student = usr.person AND cl.id_classes = rcg.old_classes_id"
         + "where usr.username like '?'"),
 
         ALL_CLASSES("SELECT cl.id_classes, sub.name, cl.class_type, cr.room_nr, ts.week_day, ts.time_slot_id "
