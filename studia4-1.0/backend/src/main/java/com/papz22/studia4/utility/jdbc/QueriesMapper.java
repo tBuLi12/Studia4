@@ -69,6 +69,11 @@ public enum QueriesMapper {
         + "JOIN Time_slots_ratings tsr on usr.person = tsr.student "
         + "WHERE usr.username = '?'"),
 
+        POLL_RATINGS("SELECT slot_id, rating "
+        + "FROM poll_time_ratings JOIN poll_time "
+        + "USING (poll_slot_id) WHERE poll_id = ? "
+        + "AND student = '?'"),
+
         CHECK_RATINGS("SELECT tsr.time_slot_id, tsr.rating "
         + "FROM Users usr "
         + "JOIN Time_slots_ratings tsr on usr.person = tsr.student "
@@ -92,6 +97,17 @@ public enum QueriesMapper {
 
         ADD_SLOT_TO_POLL("INSERT INTO poll_time VALUES (NULL, ?, ?)"),
 
+        GET_STUDENT_POLLS("SELECT DISTINCT poll_id, poll_name "
+        + "FROM poll_time_ratings "
+        + "JOIN poll_time USING (poll_slot_id) "
+        + "JOIN polls USING (poll_id) WHERE student = (SELECT person FROM users WHERE username = '?')"),
+
+        ADD_POLL_TIME_RATINGS("INSERT ALL INTO poll_time_ratings VALUES (stud, ps_id, rating) "
+        + "(SELECT studs.student stud, ps.poll_slot_id ps_id, rating "
+        + "FROM (SELECT poll_slot_id, slot_id FROM poll_time WHERE poll_id = ?) "
+        + "ps CROSS JOIN (SELECT DISTINCT student FROM stud_classes WHERE id_classes IN (*?*)) "
+        + "studs JOIN time_slots_ratings tsr ON tsr.time_slot_id = ps.slot_id AND studs.student = tsr.student)"),
+
         INSERT_POLL_RATING("INSERT INTO poll_time_ratings VALUES ("
         + "(Select person FROM Users WHERE username = '?'), (SELECT poll_slot_id "
         + "FROM poll_time pt WHERE pt.slot_id = ? AND pt.poll_id = ?), ?)"),
@@ -109,7 +125,7 @@ public enum QueriesMapper {
         FETCH_INTERSECT("SELECT time_slot_id FROM time_slots "
         + "MINUS "
         + "SELECT DISTINCT time_slot_id FROM "
-        + "(SELECT id_classes FROM stud_classes WHERE student IN (SELECT student FROM stud_classes WHERE id_classes IN (?))) "
+        + "(SELECT id_classes FROM stud_classes WHERE student IN (SELECT student FROM stud_classes WHERE id_classes IN (*?*F))) "
         + "JOIN classes USING (id_classes)"),
 
         ALTERNATIVES("SELECT ts.time_slot_id, Cl.id_classes "

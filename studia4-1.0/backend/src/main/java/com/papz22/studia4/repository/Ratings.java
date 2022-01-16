@@ -2,7 +2,7 @@ package com.papz22.studia4.repository;
 
 public class Ratings {
     private String timeSlotID;
-    private String rating;
+    private int rating;
 
 
     public Ratings() {
@@ -10,19 +10,19 @@ public class Ratings {
     }
     
 
-    public String getTimeSlotId() {
+    public String getTimeSlotID() {
         return this.timeSlotID;
     }
 
-    public void setTimeSlotId(String timeSlotId) {
-        this.timeSlotID = timeSlotId;
+    public void setTimeSlotID(String timeSlotID) {
+        this.timeSlotID = timeSlotID;
     }
 
-    public String getRating() {
+    public int getRating() {
         return this.rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
     

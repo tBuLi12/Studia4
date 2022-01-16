@@ -206,15 +206,11 @@ public class Studia4Controller {
     @Transactional
     void deletePoll(@RequestParam String pollID) 
     {
-        ArrayList<String> params = new ArrayList<>();
         try
         {
             JDCBConnection connection = new JDCBConnection();
             ParametersValidator.isInteger(pollID);
-            params.add(pollID);
-            connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL_TIME_RATINGS, params);
-            connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL_TIME, params);
-            connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL, params);
+            connection.executeUpdateOrDelete(QueriesMapper.DELETE_POLL, pollID);
             connection.closeConnection();
         } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
@@ -256,6 +252,7 @@ public class Studia4Controller {
                 subParams.add(maxPollId);
                 connection.executeUpdateOrDelete(QueriesMapper.ADD_SLOT_TO_POLL, subParams);
             }
+            connection.executeUpdateOrDeleteListWithString(QueriesMapper.ADD_POLL_TIME_RATINGS, maxPollId, classIDs);
             connection.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -300,7 +297,13 @@ public class Studia4Controller {
         params.add(auth.getName());
         try {
             JDCBConnection connection = new JDCBConnection();
-            ResultSet rs = connection.getQueryResult(QueriesMapper.FETCH_POLLS, params);
+            ResultSet rs;
+            if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_STUDENT"))){
+                rs = connection.getQueryResult(QueriesMapper.FETCH_POLLS, params);
+            } else {
+                rs = connection.getQueryResult(QueriesMapper.GET_STUDENT_POLLS, params);
+            }
             PollResult poll;
             while (rs.next()) {
                 poll = new PollResult();
@@ -345,9 +348,9 @@ public class Studia4Controller {
             //TODO getQueryResultSet with String Param
             JDCBConnection connection = new JDCBConnection();
             String pesel = extractor.extract(authentication);
+            if (froms.size() != tos.size()) throw new InvalidRequestParameterException("Correlated params lists sizes not matching!");
             for (int i = 0; i < froms.size(); i++)
             {
-                if (froms.size() != tos.size()) throw new InvalidRequestParameterException("Correlated params lists sizes not matching!");
                 ParametersValidator.isInteger(froms.get(i));
                 ParametersValidator.isInteger(tos.get(i));
                 params = new ArrayList<String>();
@@ -357,6 +360,7 @@ public class Studia4Controller {
                 connection.executeUpdateOrDelete(QueriesMapper.DELETE_CHAMGE_GROUP_REQUEST, new ArrayList<String>(params.subList(0, 2)));
                 if (!params.get(1).matches(params.get(2))) connection.executeUpdateOrDelete(QueriesMapper.ADD_RESCHEDULE, params);
             }
+            connection.closeConnection();
         } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
         } catch(SQLException e) {
@@ -377,8 +381,8 @@ public class Studia4Controller {
             Ratings rating;
             while (rs.next()) {
                 rating = new Ratings();
-                rating.setTimeSlotId(rs.getString("time_slot_id"));
-                rating.setRating("rating");
+                rating.setTimeSlotID(rs.getString("time_slot_id"));
+                rating.setRating(rs.getInt("rating"));
                 ratings.add(rating);
             }
             rs.close();
@@ -405,21 +409,22 @@ public class Studia4Controller {
                 ParametersValidator.isInteger(slotIDs.get(i));
                 ParametersValidator.isInteger(ratings.get(i));
                 params = new ArrayList<String>();
-                params.add(authentication.getName());
-                params.add(slotIDs.get(i));
-                params.add(ratings.get(i));
-                ResultSet rs = connection.getQueryResult(QueriesMapper.CHECK_RATINGS, new ArrayList<String>(params.subList(0, 2)));
-                if (rs.next()) {
+                // params.add(authentication.getName());
+                // params.add(slotIDs.get(i));
+                // params.add(ratings.get(i));
+                // ResultSet rs = connection.getQueryResult(QueriesMapper.CHECK_RATINGS, new ArrayList<String>(params.subList(0, 2)));
+                // if (rs.next()) {
                     // first time added user
-                    ArrayList<String> sub_params = new ArrayList<>();
-                    sub_params.add(ratings.get(i));
-                    sub_params.add(authentication.getName());
-                    sub_params.add(slotIDs.get(i));
-                    connection.executeUpdateOrDelete(QueriesMapper.UPDATE_RATING, sub_params);
-                } else {
-                connection.executeUpdateOrDelete(QueriesMapper.ADD_RATING, params);
-                }
+                    // ArrayList<String> sub_params = new ArrayList<>();
+                    params.add(ratings.get(i));
+                    params.add(extractor.extract(authentication));
+                    params.add(slotIDs.get(i));
+                    connection.executeUpdateOrDelete(QueriesMapper.UPDATE_RATING, params);
+                // } else {
+                // connection.executeUpdateOrDelete(QueriesMapper.ADD_RATING, params);
+                // }
             }
+            connection.closeConnection();
         } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
         } catch(SQLException e) {
@@ -427,5 +432,62 @@ public class Studia4Controller {
         }
     }
 
+
+    @PostMapping("/vote-poll")
+    void votePoll(@RequestParam String pollId, @RequestParam ArrayList<String> slotIds, @RequestParam ArrayList<String> ratings) 
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<String> params;
+        try
+        {
+            //TODO getQueryResultSet with String Param
+            JDCBConnection connection = new JDCBConnection();
+            String username = authentication.getName();
+            ParametersValidator.isInteger(pollId);
+            if (slotIds.size() != ratings.size()) throw new InvalidRequestParameterException("Correlated params lists sizes not matching!");
+            for (int i = 0; i < slotIds.size(); i++)
+            {
+                ParametersValidator.isInteger(ratings.get(i));
+                ParametersValidator.isInteger(ratings.get(i));
+                params = new ArrayList<String>();
+                params.add(username);
+                params.add(slotIds.get(i));
+                params.add(pollId);
+                params.add(ratings.get(i));
+                connection.executeUpdateOrDelete(QueriesMapper.INSERT_POLL_RATING, params);
+            }
+            connection.closeConnection();
+        } catch(InvalidRequestParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping("/poll")
+    ArrayList<Ratings> getRating(@RequestParam String pollId)
+    {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<Ratings> ratings = new ArrayList<>();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(pollId);
+        params.add(auth.getName());
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            ResultSet rs = connection.getQueryResult(QueriesMapper.POLL_RATINGS, params);
+            Ratings rating;
+            while (rs.next()) {
+                rating = new Ratings();
+                rating.setTimeSlotID(rs.getString("slot_id"));
+                rating.setRating(rs.getInt("rating"));
+                ratings.add(rating);
+            }
+            rs.close();
+            connection.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ratings;
+    }
 
 }
