@@ -103,7 +103,7 @@ public enum QueriesMapper {
         + "(SELECT id_classes FROM stud_classes WHERE student IN (SELECT student FROM stud_classes WHERE id_classes IN (?))) "
         + "JOIN classes USING (id_classes)"),
 
-        ALTERNATIVES("SELECT ts.time_slot_id, current_class.id_classes "
+        ALTERNATIVES("SELECT ts.time_slot_id, Cl.id_classes "
         + "FROM (SELECT subject, class_type, id_classes FROM Classes WHERE id_classes = ?) current_class, Classes Cl "
         + "JOIN time_slots ts ON cl.time_slot_id = ts.time_slot_id "
         + "WHERE Cl.subject = current_class.subject AND Cl.class_type = current_class.class_type");
