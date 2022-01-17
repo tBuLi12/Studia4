@@ -2,37 +2,29 @@ import React from "react";
 import { NavLink } from "./Nav";
 import './Courses.css';
 import { fetchCourses, useRemoteData } from "./Remote";
+import { useHelp } from "./App";
 
-function getCourseText(name) {
-    return `blablabla info o ${name}`;
-}
+const help = `Kliknij nazwę przedmiotu aby pokazać odnośniki do strony przedmiotuy oraz strony prowadzącego`;
 
 function CourseInfo(props) {
-    const [info, setInfo] = React.useState("");
-    React.useEffect(function() {
-        setInfo(getCourseText(props.name));
-    }, [props.name]);
     return (
         <div>
             <h2>{props.name}</h2>
-            {info}
+            Informacje o przedmiocie
         </div>
     )
 }
 
 function MaitainerInfo(props) {
-    const [info, setInfo] = React.useState("");
-    React.useEffect(function() {
-        setInfo(getCourseText(props.name));
-    }, [props.name]);
     return (
         <div>
-            {info}
+            informacje o prowadzącym
         </div>
     )
 }
 
 function CoursesList() {
+    useHelp(help);
     const [courses] = useRemoteData(fetchCourses);
     if (courses === undefined) {
         return <div>Loading content...</div>;
@@ -53,8 +45,8 @@ function Course(props) {
                 setExpanded(prev => !prev);
             }}>{props.name}</div>
             <div className="course-menu" style={{maxHeight: expanded ? "3em" : "0"}}>
-                <NavLink view={<CourseInfo name={props.name}/>}>Strona przedmiotu</NavLink>
-                <NavLink view={<MaitainerInfo name={props.maitainerName}/>}>Strona prowadzącego</NavLink>
+                <NavLink view={<CourseInfo/>}>Strona przedmiotu</NavLink>
+                <NavLink view={<MaitainerInfo/>}>Strona prowadzącego</NavLink>
             </div>
         </>
     )

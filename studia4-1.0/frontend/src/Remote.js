@@ -1,6 +1,6 @@
 import React from 'react';
 import { DispatchContext } from './App';
-const dummyData = true;
+const dummyData = false;
 const pageAt = "http://" + document.location.host;
 
 class ServerError extends Error {
@@ -200,13 +200,29 @@ export async function pushRatings(ratingsObj) {
 }
 
 export async function approveRequest(id) {
-    console.log(id);
-    return new Promise(resolve => setTimeout(() => resolve(true), 2000));
+    if (dummyData) {
+        console.log(id);
+        return new Promise(resolve => setTimeout(() => resolve(true), 2000));
+    }
+    const data = new FormData();
+    data.append("id", id);
+    data.append("action", "approve");
+    const res = await fetch(pageAt + "/request", {method: 'POST', body: data});
+    verifyResponse(res);
+    return true;
 }
 
 export async function declineRequest(id) {
-    console.log(id);
-    return new Promise((resolve, reject) => setTimeout(() => reject(new ServerError(null)), 2000));
+    if (dummyData) {
+        console.log(id);
+        return new Promise((resolve, reject) => setTimeout(() => reject(new ServerError(null)), 2000));
+    }
+    const data = new FormData();
+    data.append("id", id);
+    data.append("action", "decline");
+    const res = await fetch(pageAt + "/request", {method: 'POST', body: data});
+    verifyResponse(res);
+    return true;
 }
 
 export async function removePoll(id) {
@@ -238,31 +254,55 @@ export async function addPoll(name, slots, groups) {
 }
 
 export async function subjectRegister(id) {
+    const data = new FormData();
+    data.append("id", id);
+    const res = await fetch(pageAt + "/subject-register", {method: 'POST', body: data});
+    verifyResponse(res);
     return true;
 }
 
-export async function classRegister(sbjId, slot) {
+export async function classRegister(name, type, slot) {
+    const data = new FormData();
+    data.append("name", name);
+    data.append("type", type);
+    data.append("slotId", slot);
+    const res = await fetch(pageAt + "/class-register", {method: 'POST', body: data});
+    verifyResponse(res);
     return true;
 }
 
 export async function fetchCoursesRegister() {
-    return [{
-        name: "WSI",
-        id: "0",
-    },
-    {
-        name: "SOI",
-        id: "2",
-        slots: [1, 2, 5]
-    },
-    {
-        name: "PAP",
-        id: "3",
-    },
-    {
-        name: "PROB",
-        id: "4",
-    }];
+    if (dummyData) {
+        return [{
+            name: "WSI",
+            id: "0",
+        },
+        {
+            name: "SOI",
+            id: "2",
+            slots: [1, 2, 5]
+        },
+        {
+            name: "PAP",
+            id: "3",
+        },
+        {
+            name: "PROB",
+            id: "4",
+        }];
+    }
+    const url = new URL(pageAt + "/courses");
+    url.searchParams.append("all", "true");
+    const res = await fetch(url);
+    verifyResponse(res);
+    return (await res.json()).map(({name, id}) => ({name, id}));
+}
+
+export async function fetchClassesRegister() {
+    const url = new URL(pageAt + "/reg-classes");
+    const res = await fetch(url);
+    verifyResponse(res);
+    return (await res.json()).map(({name, classType, ids}) => ({name: name + " " + classType, stem: name, type: classType, slots: ids}));
 }
 
 export async function resolvePoll(id) {
@@ -307,26 +347,31 @@ export async function fetchGrades(user) {
     ])
 }
 
-export async function fetchRequests(user) {
-    return ([{
-        id: "0",
-        cls: {
-            name: "WSI",
-            type: ["Laboratorium", "Cwiczenia", "Wyklad"][Math.floor(Math.random()*3)],
+export async function fetchRequests() {
+    if (dummyData) {
+        return ([{
+            id: "0",
+            cls: {
+                name: "WSI",
+                type: ["Laboratorium", "Cwiczenia", "Wyklad"][Math.floor(Math.random()*3)],
+            },
+            stud: "Jeremi Sobierski",
+            to: "3"
         },
-        stud: "Jeremi Sobierski",
-        to: "3"
-    },
-    {
-        id: "1",
-        cls: {
-            name: "SOI",
-            type: ["Laboratorium", "Cwiczenia", "Wyklad"][Math.floor(Math.random()*3)],
-        },
-        stud: "Karol Orzechowski",
-        to: "25"
+        {
+            id: "1",
+            cls: {
+                name: "SOI",
+                type: ["Laboratorium", "Cwiczenia", "Wyklad"][Math.floor(Math.random()*3)],
+            },
+            stud: "Karol Orzechowski",
+            to: "25"
+        }
+        ])
     }
-    ])
+    const res = await fetch(pageAt + "/requests");
+    verifyResponse(res);
+    return (await res.json()).map(({requestId, name, student, surname, classType, timeSlotID}) => ({id: requestId, clsName: name, clsType: classType, stud: student + " " + surname, to: timeSlotID}));
 }
 
 export async function fetchPolls() {
@@ -420,18 +465,27 @@ export async function fetchGroupSchedule(groups) {
 }
 
 export async function fetchPollSlots(id) {
-    return {"0": 3, "22": 4};
+    if (dummyData) {
+        return {"1": 3, "22": 4};
+    }
+    const url = new URL(pageAt + "/poll")
+    url.searchParams.append("pollId", id);
+    const res = await fetch(url);
+    verifyResponse(res);
+    const rtsObj = {};
+    (await res.json()).forEach(({ timeSlotID, rating }) => {rtsObj[timeSlotID] = rating});
+    return rtsObj;
 }
 
 export async function fetchNews() {
     return [
         {
-            title: "Som news",
-            text: "yyyyyyysapidfj aijsd 0iasj d0asdjo asj"
+            title: "Tytuł",
+            text: "Jakieś informacje"
         },
         {
-            title: "Hee",
-            text: "0aijsdiwef0u82hgfy23h8irj1jkfi0owshdfsgbfhidb"
+            title: "Inny Tytuł",
+            text: "Inne ważne informacje"
         }
     ]
 }
@@ -439,11 +493,11 @@ export async function fetchNews() {
 export async function fetchWorkers() {
     return [
         {
-            name: "Ewa S.",
+            name: "Piotr Nowak",
             id: "0"
         },
         {
-            name: "Peter Gawkuu",
+            name: "Stanisław Kowalski",
             id: "1"
         }
     ];
@@ -453,4 +507,9 @@ export async function fetchWorkerInfo(id) {
     return {
         text: "Jakieś info o panu pracowniku"
     };
+}
+
+export async function buildSchedule() {
+    fetch(pageAt + "/build-schedule");
+    return true;
 }

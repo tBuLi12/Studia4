@@ -1,10 +1,15 @@
 import React from 'react';
 import './Schedule.css';
-import { Button, DispatchContext, WidthContext } from "./App";
+import { Button, DispatchContext, useHelp, WidthContext } from "./App";
 import { fetchClasses, pushRescheduleRequest, pushRatings, fetchRatings, useRemoteData } from "./Remote";
 import { getColor } from './Register';
 const hours = ["8:15", "10:15", "12:15", "14:15", "16:15", "18:15"];
 const days = ["poniedzialek", "wtorek", "sroda", "czwartek", "piatek"];
+
+const help = `Aby złożyć prośbę o zmianę grupy, wybierz pod planem "zmiana grup"
+Następnie przeciągnij kafelek na jeden z podświetlonych alternatywnych terminów.
+Aby zmienić swoje preferencje czasowe, kliknij "dogodność godzin"
+Następnie oceń dogodność każdego przedziału od 0 do 6 i kliknij "zapisz"`;
 
 function getSlotId(day, hour) {
     return (1 + hours.indexOf(hour) + days.indexOf(day)*6).toString();
@@ -242,6 +247,7 @@ export function Schedule({ initSchedule, initRatings, initSelections, onSelect, 
 }
 
 function ScheduleView() {
+    useHelp(help);
     console.log("sched view rerenders");
     const dispatch = React.useContext(DispatchContext);
     const [mode, setMode] = React.useState("view");

@@ -1,34 +1,39 @@
 import React from 'react';
 import { Button, DispatchContext, SearchBar, usePopup, verifyClose } from "./App";
-import { classRegister, fetchClasses, fetchCourses, fetchCoursesRegister, fetchRatings, subjectRegister, useRemoteData } from "./Remote";
+import { classRegister, fetchClasses, fetchCourses, fetchCoursesRegister, fetchRatings, subjectRegister, useRemoteData, fetchClassesRegister } from "./Remote";
 import { Schedule } from './Schedule';
 import './Register.css';
 
 export default function Register() {
-    const [allSubjects] = useRemoteData(fetchCoursesRegister);
-    const [mySubjects] = useRemoteData(fetchCourses);
-    const [schedule] = useRemoteData(fetchClasses);
+    console.log("rendering register");
+    const [allCourses] = useRemoteData(fetchCoursesRegister);
+    const [allClasses] = useRemoteData(fetchClassesRegister);
+    const [mySubjects, refreshSubs] = useRemoteData(fetchCourses);
+    const [mySchedule, refreshSched] = useRemoteData(fetchClasses);
     const [ratings] = useRemoteData(fetchRatings);
     const [popup, show] = usePopup();
     const [currSubjects, setSubjects] = React.useState(null);
     const registeredSubjects = React.useMemo(() => sbjSet(mySubjects), [mySubjects]);
-    if (allSubjects === undefined || registeredSubjects === undefined || ratings === undefined) {
+    const registeredClasses = React.useMemo(() => clsSet(mySchedule), [mySchedule]);
+    const all = React.useMemo(() => allClasses && allCourses && [...allClasses, ...allCourses], [allClasses, allCourses]);
+    if (allCourses === undefined || registeredSubjects === undefined || ratings === undefined || allClasses === undefined || registeredClasses === undefined) {
         return <div>Loading subjects...</div>;
     }
-    const fwd = {show, schedule, ratings};
-    const subjects = currSubjects ?? allSubjects;
+    const fwd = {show, mySchedule, ratings, refreshSched, refreshSubs};
+    const subjects = currSubjects ?? all;
     return (<>
         <div className="content-box">
             Rejestracja
-            <SearchBar onSearch={srch => setSubjects(allSubjects.filter(sub => sub.name.includes(srch)))}/>
+            <SearchBar onSearch={srch => setSubjects(all.filter(sub => sub.name.includes(srch)))}/>
             {currSubjects !== null && <Button onClick={() => setSubjects(null)}>Wyczyść</Button>}
-            {subjects.map(sbj => <SubjectRegister sbj={sbj} alReg={registeredSubjects.has(sbj.id)} {...fwd}/>)}
+            {subjects.map(sbj => <SubjectRegister sbj={sbj} alReg={sbj.slots ? registeredClasses.has(sbj.name) : registeredSubjects.has(sbj.id)} {...fwd}/>)}
         </div>
         {popup}
     </>);
 }
 
-function SubjectRegister({ sbj, ratings, alReg, show, schedule }) {
+function SubjectRegister({ sbj, ratings, alReg, show, mySchedule, refreshSched, refreshSubs }) {
+    console.log("rendering register item");
     const dispatch = React.useContext(DispatchContext);
     const slots = React.useMemo(function() {
         if (sbj.slots === undefined) {
@@ -46,11 +51,11 @@ function SubjectRegister({ sbj, ratings, alReg, show, schedule }) {
                 <Button onClick={function() {
                     (slots ? show(h => <Schedule
                         title="Wybierz termin"
-                        initSchedule={schedule}
+                        initSchedule={mySchedule}
                         initSelections={slots}
                         mode={"select"}
                         onSelect={h}
-                    />).then(slot => classRegister(sbj.id, slot), verifyClose) : subjectRegister(sbj.id))
+                    />).then(slot => classRegister(sbj.stem, sbj.type, slot), verifyClose).then(refreshSched) : subjectRegister(sbj.id).then(refreshSubs))
                         .catch(err => dispatch({action: "popupError", data: err}));
                 }}>Zarejestruj</Button>
             </div>}
@@ -59,7 +64,11 @@ function SubjectRegister({ sbj, ratings, alReg, show, schedule }) {
 }
 
 function evalSlots(slots, ratings) {
-    const ratingVals = slots.map(s => ratings[s]).filter(r => r !== undefined).sort().reverse()
+    console.log("evaluating slots");
+    const ratingVals = slots.map(s => ratings[s]).filter(r => r !== undefined).sort().reverse();
+    if (ratingVals.length === 0) {
+        return 0;
+    }
     return genWeights(0.8, 1, ratingVals.length).map((w, i) => w*ratingVals[i]).reduce((r1, r2) => r1+r2) / 6
 }
 
@@ -75,10 +84,21 @@ export function getColor(val) {
 }
 
 function sbjSet(subjects) {
+    console.log("subject set");
     if (subjects === undefined) {
         return undefined;
     }
     const retSet = new Set();
     subjects.forEach(sbj => retSet.add(sbj.id));
+    return retSet;
+}
+
+function clsSet(classes) {
+    console.log("class set");
+    if (classes === undefined) {
+        return undefined;
+    }
+    const retSet = new Set();
+    Object.values(classes).forEach(cls => retSet.add(cls.name + " " + cls.type));
     return retSet;
 }

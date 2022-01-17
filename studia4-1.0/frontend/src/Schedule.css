@@ -5,6 +5,7 @@
 
 #schedule {
     font-size: max(1em, 30px);
+    max-width: none;
 }
 
 #daylist {

@@ -1,8 +1,12 @@
 import React from "react"
-import { Button, DispatchContext, SearchBar } from "./App";
+import { Button, DispatchContext, SearchBar, useHelp } from "./App";
 import { fetchWorkerInfo, fetchWorkers, useRemoteData } from "./Remote";
 
+const help = `Wyszukaj pracowników w polu tekstowym,
+a następnie kliknij wybierz aby zoabczyć informacje na jego temat`;
+
 export default function Workers() {
+    useHelp(help);
     const dispatch = React.useContext(DispatchContext);
     const [workers] = useRemoteData(fetchWorkers);
     const suggestions = React.useMemo(() => workers?.map(w => w.name), [workers]);

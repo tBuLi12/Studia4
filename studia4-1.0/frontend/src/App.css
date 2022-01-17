@@ -129,3 +129,17 @@ body {
 .info-text {
     font-size: max(1em, 21px);
 }
+
+.help {
+    cursor: pointer;
+    font-size: 0.8em;
+    margin: 0.2em;
+    line-height: 1em;
+    position: fixed;
+    top: 2em;
+    right: 0.2em;
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 50%;
+    background-color: rgb(255, 180, 193);
+}
