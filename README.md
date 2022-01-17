@@ -32,7 +32,7 @@ Wymagania, które stawiamy implementacji:
 Link do działającego podglądu: https://tbuli12.pythonanywhere.com/static/preview.html
 Podgląd:
 
-![](https://tbuli12.pythonanywhere.com/static/preview.html)
+[preview](https://tbuli12.pythonanywhere.com/static/index.html)
 
 ## Architektura Rozwiązania
 Główna logika programu będzie oddzielona od bazy danych oraz interfejsów użytkownika. UI będzie komunikowało się z backendem, który następnie wyśle odpowiednie zapytanie do bazy danych.
