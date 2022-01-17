@@ -146,4 +146,7 @@ public class JDCBConnection {
     {
         this.connection.close();
     }
+
+    public void executeUpdateOrDelete(QueriesMapper buildScheduleGetClassids) {
+    }
 }

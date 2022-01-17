@@ -612,27 +612,30 @@ public class Studia4Controller {
             ArrayList<String> result = new ArrayList<>();
             while(rs.next()) {
                 result.add(rs.getString("id_classes"));
+                
             }
+            
             String[] classIDs = result.toArray(new String[0]);
+            rs.close();
             for (String id : classIDs)
             {
                 ArrayList<String> subResult = new ArrayList<>();
                 ResultSet subRs = connection.getQueryResultSet(QueriesMapper.BUILD_SCHEDULE_GET_COLLISIONS, id);
-                while(rs.next())
+                while(subRs.next())
                 {
                     subResult.add(subRs.getString("id_classes"));
                 }
-                String[] collsIDs = result.toArray(new String[0]);
+                String[] collsIDs = subResult.toArray(new String[subResult.size()]);
                 collisions.put(id, collsIDs);
             }
             ScheduleSolver solver = new ScheduleSolver(classIDs, collisions, N_SLOTS);
             HashMap<String, Integer> solvedSchedule = solver.solve();
-            
             for (Map.Entry<String, Integer> entry : solvedSchedule.entrySet())
             {
                 ArrayList<String> subParams = new ArrayList<>();
+                int inceremented = entry.getValue() + 1;
+                subParams.add(Integer.toString(inceremented));
                 subParams.add(entry.getKey());
-                subParams.add(entry.getValue().toString());
                 connection.executeUpdateOrDelete(QueriesMapper.BUILD_SCHEDULE_SET_TIME, subParams);
             }
             connection.closeConnection();

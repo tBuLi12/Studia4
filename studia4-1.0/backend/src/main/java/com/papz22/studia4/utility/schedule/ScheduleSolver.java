@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 public class ScheduleSolver {
-    Schedule schedule;
+    Schedule schedule = new Schedule();
     public ScheduleSolver(String[] classes, Map<String, String[]> collisions, int nSlots) {
         schedule.classes = new Class[classes.length];
         HashMap<String, Class> mapping = new HashMap<>();

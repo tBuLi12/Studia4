@@ -150,7 +150,7 @@ public enum QueriesMapper {
         + "JOIN stud_classes cols USING (student) "
         + "WHERE c.id_classes <> cols.id_classes AND c.id_classes = ?"),
 
-        BUILD_SCHEDULE_SET_TIME("UPDATE classes SET slot_id = ? WHERE id_classes = ?"),
+        BUILD_SCHEDULE_SET_TIME("UPDATE classes SET time_slot_id = ? WHERE id_classes = ?"),
 
         ALTERNATIVES("SELECT ts.time_slot_id, Cl.id_classes "
         + "FROM (SELECT subject, class_type, id_classes FROM Classes WHERE id_classes = ?) current_class, Classes Cl "
