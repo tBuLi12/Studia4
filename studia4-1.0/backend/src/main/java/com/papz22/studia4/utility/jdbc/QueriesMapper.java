@@ -24,12 +24,24 @@ public enum QueriesMapper {
 
         DELETE_ADD_RESCHEDULE("DELETE FROM request_change_group WHERE student = '?' AND old_classes_id = ?"),
 
-        COURSES("SELECT Sbj.subject_id as sbj_subject_id, Sbj.name as sbj_name "
+        COURSES("SELECT Sbj.subject_id, Sbj.name "
         + "FROM Users usr, Student S, Subject Sbj, Stud_subjects Stud_sbj "
         + "WHERE usr.username like '?' "
         + "AND S.person = usr.person "
         + "AND S.person = Stud_sbj.student "
         + "AND Stud_sbj.subject = Sbj.subject_id"),
+
+        ALL_COURSES("SELECT subject_id, name FROM Subject"),
+
+        CLASSES_REGISTER("SELECT DISTINCT s.name, c.class_type FROM classes c JOIN subject s ON s.subject_id = c.subject"),
+
+        CLASSES_REGISTER_PROPERTY("SELECT c.time_slot_id FROM classes c JOIN subject s ON s.subject_id = c.subject WHERE s.name = '?' AND c.class_type = '?'"),
+
+        SUBJECT_REGISTER("INSERT INTO stud_subjects VALUES ('?', 1, 'engineering', ?, 5)"),
+
+        CLASS_REGISTER("INSERT INTO stud_classes VALUES "
+        + "('?', (SELECT id_classes FROM classes c JOIN subject s ON c.subject = s.subject_id "
+        + "WHERE s.name = '?' AND c.class_type = '?' AND c.time_slot_id = '?'))"),
 
         // CHANGE_REQUEST("SELECT Cl.id_classes "
         // + "FROM Classes Cl, (SELECT subject, class_type FROM Classes WHERE id_classes = '?') current_class "

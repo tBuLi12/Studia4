@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import com.papz22.studia4.repository.Alternative;
 import com.papz22.studia4.repository.ChangeRequest;
 import com.papz22.studia4.repository.Classes;
+import com.papz22.studia4.repository.ClassesRegister;
 import com.papz22.studia4.repository.PollResult;
 import com.papz22.studia4.repository.Ratings;
 import com.papz22.studia4.repository.UniSubject;
@@ -35,18 +36,20 @@ public class Studia4Controller {
     PeselExtractor extractor;
 
     @GetMapping("/courses")
-    ArrayList<UniSubject> getCourses(Authentication auth) {
+    ArrayList<UniSubject> getCourses(Authentication auth, @RequestParam(required = false) String all) {
         ArrayList<UniSubject> clss = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
+        if(all == null) all = "";
         params.add(auth.getName());
         try{
         JDCBConnection connection = new JDCBConnection();
-        ResultSet rs = connection.getQueryResult(QueriesMapper.COURSES, params);
+       
+        ResultSet rs = (!all.matches("true")) ? connection.getQueryResult(QueriesMapper.COURSES, params) : connection.getQueryResut(QueriesMapper.ALL_COURSES);
             UniSubject cls;
             while (rs.next()) {
                 cls = new UniSubject();
-                cls.setId(rs.getInt("sbj_subject_id"));
-                cls.setName(rs.getString("sbj_name"));
+                cls.setId(rs.getInt("subject_id"));
+                cls.setName(rs.getString("name"));
                 clss.add(cls);
             }
             rs.close();
@@ -117,6 +120,45 @@ public class Studia4Controller {
         return lectures;
     }
 
+    @GetMapping("/reg-classes")
+    ArrayList<ClassesRegister> getRegClasses(Authentication auth) {
+        ArrayList<ClassesRegister> regs = new ArrayList<>();
+        //TODO get everything in one try catch block
+        try {
+            JDCBConnection connection = new JDCBConnection();
+            ClassesRegister reg;
+            ResultSet rs = connection.getQueryResut(QueriesMapper.CLASSES_REGISTER);
+            while (rs.next()) {
+                reg = new ClassesRegister();
+                reg.setName(rs.getString("name"));
+                reg.setClassType(rs.getString("class_type"));
+                regs.add(reg);
+                }
+                rs.close();
+            connection.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //TODO check loops
+            try {
+                JDCBConnection connection = new JDCBConnection();
+                for (ClassesRegister rg : regs){
+                    ArrayList<String> params = new ArrayList<>();
+                    params.add(rg.getName());
+                    params.add(rg.getClassType());
+                    ResultSet rs_sub = connection.getQueryResult(QueriesMapper.CLASSES_REGISTER_PROPERTY, params);
+                    while (rs_sub.next()) {
+                        rg.getIds().add(rs_sub.getString("time_slot_id"));
+                    }
+                    rs_sub.close();
+            }
+                
+            connection.closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        return regs;
+    }
 
     @GetMapping("/logged")
     Map<String, String> getLoggedUser(Authentication authentication)
@@ -509,5 +551,48 @@ public class Studia4Controller {
         } catch(SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @PostMapping("/subject-register")
+    void subjectRegister(@RequestParam String id) 
+    {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(extractor.extract(auth));
+        params.add(id);
+        try
+        {
+            JDCBConnection connection = new JDCBConnection();
+            ParametersValidator.isInteger(id);
+            connection.executeUpdateOrDelete(QueriesMapper.SUBJECT_REGISTER, params);
+            connection.closeConnection();
+        } catch(InvalidRequestParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
     } 
+
+    @PostMapping("/class-register")
+    void subjectRegister(@RequestParam String name, @RequestParam String type, @RequestParam String slotId) 
+    {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        ArrayList<String> params = new ArrayList<>();
+        params.add(extractor.extract(auth));
+        params.add(name);
+        params.add(type);
+        params.add(slotId);
+        try
+        {
+            JDCBConnection connection = new JDCBConnection();
+            ParametersValidator.isInteger(slotId);
+            connection.executeUpdateOrDelete(QueriesMapper.CLASS_REGISTER, params);
+            connection.closeConnection();
+        } catch(InvalidRequestParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    } 
+
 }
