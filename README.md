@@ -45,4 +45,4 @@ Uruchomienie aplikacji wymaga posiadania javy 17 oraz mavena 3.8.3.
 
 ## Dokumentacja
 
-[System "Studia4"](https://gitlab-stud.elka.pw.edu.pl/korzech2/studia4/-/master/docs)
+[Dokumentacja "Studia4"](https://gitlab-stud.elka.pw.edu.pl/korzech2/studia4/-/tree/master/docs)
