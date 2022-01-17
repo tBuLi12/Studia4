@@ -29,10 +29,8 @@ Wymagania, które stawiamy implementacji:
 * testowanie przy użyciu programów naśladujących działanie użytkowników
 
 ## Wygląd Aplikacji
-Link do działającego podglądu: https://tbuli12.pythonanywhere.com/static/preview.html
-Podgląd:
 
-[preview](https://tbuli12.pythonanywhere.com/static/index.html)
+[Podgląd:](https://tbuli12.pythonanywhere.com/static/index.html)
 
 ## Architektura Rozwiązania
 Główna logika programu będzie oddzielona od bazy danych oraz interfejsów użytkownika. UI będzie komunikowało się z backendem, który następnie wyśle odpowiednie zapytanie do bazy danych.
