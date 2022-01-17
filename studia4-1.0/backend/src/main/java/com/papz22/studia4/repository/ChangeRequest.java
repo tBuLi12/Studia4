@@ -5,12 +5,23 @@ public class ChangeRequest {
     private String name;
     private String classType;
     private String student;
+    private String surname;
     private String weekDay;
     private int timeSlotID;
 
 
     public ChangeRequest() {
     }
+    
+
+    public String getSurname() {
+        return this.surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
 
     public int getRequestId() {
         return this.requestId;

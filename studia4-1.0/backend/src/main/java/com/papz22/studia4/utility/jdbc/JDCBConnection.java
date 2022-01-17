@@ -59,7 +59,7 @@ public class JDCBConnection {
 
     private String mapParametersToQuery(String query, String param) throws NotMatchingParameterException
     {
-        query = query.replaceFirst("[?]", param);
+        query = query.replaceAll("[?]", param);
         //TODO add some descent logger to app
         System.out.println("==============================");
         System.out.println(query);

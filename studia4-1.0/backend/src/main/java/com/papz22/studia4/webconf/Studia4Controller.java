@@ -134,20 +134,20 @@ public class Studia4Controller {
         return credentials;
     }
 
-    @GetMapping("/delete")
-    void delete(@RequestParam String id){
-    ArrayList<String> params = new ArrayList<>();
-        params.add(id);
-    {
-        try {
-            JDCBConnection connection = new JDCBConnection();
-            connection.executeUpdateOrDelete(QueriesMapper.DELETE_REQUEST_CHANGE_GROUP, params);
-            connection.closeConnection();
-        }catch(SQLException e){
-            e.printStackTrace();
-            }
-        }
-    }
+    // @GetMapping("/delete")
+    // void delete(@RequestParam String id){
+    // ArrayList<String> params = new ArrayList<>();
+    //     params.add(id);
+    // {
+    //     try {
+    //         JDCBConnection connection = new JDCBConnection();
+    //         connection.executeUpdateOrDelete(QueriesMapper.DELETE_REQUEST_CHANGE_GROUP, params);
+    //         connection.closeConnection();
+    //     }catch(SQLException e){
+    //         e.printStackTrace();
+    //         }
+    //     }
+    // }
 
     @GetMapping("/requests")
     ArrayList<ChangeRequest> getChangeRequests(Authentication auth) {
@@ -162,8 +162,8 @@ public class Studia4Controller {
                 req = new ChangeRequest();
                 req.setRequestId(rs.getInt("request_id"));
                 req.setName(rs.getString("name"));
-                req.setStudent(rs.getString("student"));
-                req.setWeekDay(rs.getString("week_day"));
+                req.setStudent(rs.getString("stud_name"));
+                req.setSurname(rs.getString("surname"));
                 req.setTimeSlotID(rs.getInt("time_slot_id"));
                 requests.add(req);
             }
@@ -357,7 +357,7 @@ public class Studia4Controller {
                 params.add(pesel);
                 params.add(froms.get(i));
                 params.add(tos.get(i));
-                connection.executeUpdateOrDelete(QueriesMapper.DELETE_CHAMGE_GROUP_REQUEST, new ArrayList<String>(params.subList(0, 2)));
+                connection.executeUpdateOrDelete(QueriesMapper.DELETE_ADD_RESCHEDULE, new ArrayList<String>(params.subList(0, 2)));
                 if (!params.get(1).matches(params.get(2))) connection.executeUpdateOrDelete(QueriesMapper.ADD_RESCHEDULE, params);
             }
             connection.closeConnection();
@@ -434,6 +434,7 @@ public class Studia4Controller {
 
 
     @PostMapping("/vote-poll")
+    @Transactional
     void votePoll(@RequestParam String pollId, @RequestParam ArrayList<String> slotIds, @RequestParam ArrayList<String> ratings) 
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -441,22 +442,22 @@ public class Studia4Controller {
         try
         {
             //TODO getQueryResultSet with String Param
-            JDCBConnection connection = new JDCBConnection();
             String username = authentication.getName();
             ParametersValidator.isInteger(pollId);
             if (slotIds.size() != ratings.size()) throw new InvalidRequestParameterException("Correlated params lists sizes not matching!");
             for (int i = 0; i < slotIds.size(); i++)
             {
+                JDCBConnection connection = new JDCBConnection();
                 ParametersValidator.isInteger(ratings.get(i));
                 ParametersValidator.isInteger(ratings.get(i));
                 params = new ArrayList<String>();
+                params.add(ratings.get(i));
                 params.add(username);
                 params.add(slotIds.get(i));
                 params.add(pollId);
-                params.add(ratings.get(i));
-                connection.executeUpdateOrDelete(QueriesMapper.INSERT_POLL_RATING, params);
+                connection.executeUpdateOrDelete(QueriesMapper.UPDATE_POLL_RATING, params);
+                connection.closeConnection();
             }
-            connection.closeConnection();
         } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
         } catch(SQLException e) {
@@ -490,4 +491,23 @@ public class Studia4Controller {
         return ratings;
     }
 
+    @PostMapping("/request")
+    void doRequest(@RequestParam String id, @RequestParam String action) 
+    {
+        try
+        {
+            JDCBConnection connection = new JDCBConnection();
+            ParametersValidator.isInteger(id);
+            if (action.matches("approve")) {
+                connection.executeUpdateOrDelete(QueriesMapper.RESCHEDULE, id);
+            } else {
+                connection.executeUpdateOrDelete(QueriesMapper.DELETE_REQUEST_CHANGE_GROUP, id);
+            }
+            connection.closeConnection();
+        } catch(InvalidRequestParameterException e) {
+            e.printStackTrace();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    } 
 }

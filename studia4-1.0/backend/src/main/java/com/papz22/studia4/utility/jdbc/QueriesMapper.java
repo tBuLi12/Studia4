@@ -22,7 +22,7 @@ public enum QueriesMapper {
         + "inner join Classroom cr on cr.room_id = cl.class_room "
         + "inner join time_slots ts on ts.time_slot_id = cl.time_slot_id "),
 
-        DELETE_CHAMGE_GROUP_REQUEST("DELETE FROM request_change_group WHERE student = '?' AND old_classes_id = ?"),
+        DELETE_ADD_RESCHEDULE("DELETE FROM request_change_group WHERE student = '?' AND old_classes_id = ?"),
 
         COURSES("SELECT Sbj.subject_id as sbj_subject_id, Sbj.name as sbj_name "
         + "FROM Users usr, Student S, Subject Sbj, Stud_subjects Stud_sbj "
@@ -43,12 +43,12 @@ public enum QueriesMapper {
 //delete req
         DELETE_REQUEST_CHANGE_GROUP("DELETE FROM request_change_group req WHERE req.request_id = ?"),
 
-        REQUESTS("SELECT req.request_id, sub.name, cl.class_type, req.student, ts.week_day, ts.time_slot_id "
+        REQUESTS("SELECT req.request_id, sub.name, cl.class_type, stud.name as stud_name, stud.surname, cl.time_slot_id "
         + "FROM request_change_group req "
         + "JOIN Classes cl on req.new_classes_id = cl.id_classes "
         + "JOIN Subject sub on cl.subject = sub.subject_id "
         + "JOIN Users usr on usr.person = sub.coordinator "
-        + "JOIN Time_slots ts on ts.time_slot_id = cl.time_slot_id "
+        + "JOIN people stud ON stud.pesel = usr.person "
         + "WHERE usr.username = '?'"),
 
         ADD_RESCHEDULE("INSERT INTO request_change_group VALUES (NULL, '?', ?, ?)"),
@@ -72,7 +72,7 @@ public enum QueriesMapper {
         POLL_RATINGS("SELECT slot_id, rating "
         + "FROM poll_time_ratings JOIN poll_time "
         + "USING (poll_slot_id) WHERE poll_id = ? "
-        + "AND student = '?'"),
+        + "AND student = (Select person FROM Users WHERE username = '?')"),
 
         CHECK_RATINGS("SELECT tsr.time_slot_id, tsr.rating "
         + "FROM Users usr "
@@ -113,6 +113,10 @@ public enum QueriesMapper {
         + "FROM poll_time pt WHERE pt.slot_id = ? AND pt.poll_id = ?), ?)"),
 
         GET_MAX_POLL_ID("SELECT MAX(POLL_ID) as MAX FROM polls"),
+
+        UPDATE_POLL_RATING("UPDATE poll_time_ratings SET rating = ? "
+        + "WHERE student = (Select person FROM Users WHERE username = '?') "
+        + "AND poll_slot_id = (SELECT poll_slot_id FROM poll_time WHERE slot_id = ? AND poll_id = ?)"),
 
         POLL_RESULT("SELECT pt.slot_id, SUM(ptr.rating) as rating "
         + "from poll_time_ratings ptr "
