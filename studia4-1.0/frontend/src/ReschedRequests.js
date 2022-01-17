@@ -20,13 +20,13 @@ export default function ReschedRequests() {
     );
 }
 
-function RRequest({ id, stud, cls, to, del }) {
+function RRequest({ id, stud, clsName, clsType, to, del }) {
     const [pending, setPending] = React.useState(false);
     const dispatch = React.useContext(DispatchContext);
     return (
         <div className="box-row">
             <div className='request-text'>
-                {cls.name} {cls.type},<br/>
+                {clsName} {clsType},<br/>
                 {stud},<br/>
                 na {getSlotName(to)}
             </div>

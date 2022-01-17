@@ -1,11 +1,24 @@
 import React from 'react';
-import { Button, DispatchContext, GroupSelector, usePopup, verifyClose } from "./App";
+import { Button, DispatchContext, GroupSelector, useHelp, usePopup, verifyClose } from "./App";
 import { fetchPolls, useRemoteData, removePoll, resolvePoll, votePoll, fetchPollSlots, fetchIntersect, addPoll } from "./Remote";
 import { expandSelection, Schedule } from './Schedule';
+
+const studHelp = `Wybierz "głosuj" aby wziąć udział w ankiecie
+
+Następnie na wyświetlonym planie pojawią się liczniki w terminach dostępnych w wybranej ankiecie
+Oceń od 0 do 6 dogodność przedstawionych terminów, a następnie zatwierdź przyciskiem pod planem`;
+
+const workerHelp = `Wynik - podgląd aktualnego wyniku ankiety
+Zakończ - usuwa ankietę
+Dodaj - dodawanie ankiety:
+Wyświetli się pole tekstowe, w którym wyszukać można wyszukać nazwę grupy, zajęć, bądź przedmiotu
+Po wciśnięciu "wyberz" wyświetli się plan zajęć z oznaczonymi wspólnymi wolnymi terminami dla studentów z tych grup
+Klikając w pola można zmieniać oznaczenie pól. Po wpisaniu nazwy można utworzyć ankietę, w której do wyboru będą oznaczone uprzednio pola`;
 
 export default function Polls({ user }) {
     const dispatch = React.useContext(DispatchContext);
     const stud = user.position === "ROLE_STUDENT";
+    useHelp(stud ? studHelp : workerHelp);
     const [polls, _, setPolls] = useRemoteData(fetchPolls);
     const [popup, show] = usePopup();
     const resolve = React.useCallback(function resolve(id) {

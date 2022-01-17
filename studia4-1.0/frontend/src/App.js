@@ -25,7 +25,7 @@ function stateReducer(state, { action, data }) {
         case "logout":
             return {...state, user: null, content: <LogIn/>};
         case "setContent":
-            return {...state, content: data};
+            return {...state, content: data, popup: null};
         case "error":
             return {...state, content: <div className='info-text'>{data.message}</div>}
         case "popupError":
@@ -34,17 +34,22 @@ function stateReducer(state, { action, data }) {
             return {...state, popup: null}
         case "setUser":
             return {...state, user: data};
+        case "showHelp":
+            return {...state, popup: state.help};
+        case "setHelp":
+            return {...state, help: data};
         default:
             return state;
     }
 }
 
 export default function App() {
-    const [{ content, user, width, popup }, dispatch] = React.useReducer(stateReducer, {
+    const [{ content, user, width, popup, help }, dispatch] = React.useReducer(stateReducer, {
         content: null,
         user: undefined,
         width: window.innerWidth,
-        popup: null
+        popup: null,
+        help: null
     });
     React.useEffect(function() {
         const updateWidth = () => dispatch({action: "resize"});
@@ -59,14 +64,14 @@ export default function App() {
                 .catch(err => dispatch({action: "error", data: err}));
         }
     }, [user])
-    React.useEffect(function() {
-        // const intt = setInterval(() => console.log(document.activeElement), 500);
-        // return () => clearInterval(intt);
-        const logevent = event => console.log(event);
-        window.addEventListener("pointerdown", logevent);
-        window.addEventListener("pointerup", logevent);
-        window.addEventListener("pointercancel", logevent);
-    }, []);
+    // React.useEffect(function() {
+    //     // const intt = setInterval(() => console.log(document.activeElement), 500);
+    //     // return () => clearInterval(intt);
+    //     const logevent = event => console.log(event);
+    //     window.addEventListener("pointerdown", logevent);
+    //     window.addEventListener("pointerup", logevent);
+    //     window.addEventListener("pointercancel", logevent);
+    // }, []);
 
     const links = [
         {name: "Plan zajęć", view: <ScheduleView/>},
@@ -93,31 +98,25 @@ export default function App() {
         }
     }
     return (
-        <WidthContext.Provider value={width}>
         <DispatchContext.Provider value={dispatch}>
-            <NavBar links={links} windWidth={width} user={user}/>
-            <ContentBox>
-                {user === undefined ? <div>Loading...</div> : content}
-            </ContentBox>
-            {popup && <Popup close={() => dispatch({action: "closePopup"})}>{popup}</Popup>}
-            <Footer/>
+            <WidthContext.Provider value={width}>
+                <NavBar links={links} windWidth={width} user={user}/>
+                    <div id="content">
+                    {help && <div className='help' onClick={() => dispatch({action: "showHelp"})}>?</div>}
+                        <div>
+                            {user === undefined ? <div>Loading...</div> : content}
+                        </div>
+                    </div>
+                    {popup && <Popup close={() => dispatch({action: "closePopup"})}>{popup}</Popup>}
+                <Footer/>
+            </WidthContext.Provider>
         </DispatchContext.Provider>
-        </WidthContext.Provider>
-    );
-}
-
-function ContentBox({ children }) {
-    return (
-        <div id="content">
-            <div>
-                {children}
-            </div>
-        </div>
     );
 }
 
 export const Button = React.forwardRef(function({ onClick, children, submit, style, autofocus, form }, ref) {
     const [clicked, setClicked] = React.useState(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => autofocus && ref.current.focus({preventScroll: true}), []);
     return (
         <button 
@@ -281,4 +280,16 @@ export function verifyClose(err) {
     if (err !== "popup closed") {
         throw err;
     }
+}
+
+function formatHelp(help) {
+    return help.split('\n').map(line => <>{line}<br/></>)
+}
+
+export function useHelp(help) {
+    const dispatch = React.useContext(DispatchContext);
+    React.useEffect(function() {
+        dispatch({action: "setHelp", data: formatHelp(help)});
+        return () => dispatch({action: "setHelp", data: null});
+    }, [dispatch, help]);
 }
