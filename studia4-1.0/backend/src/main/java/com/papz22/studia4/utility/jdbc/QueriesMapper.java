@@ -144,6 +144,14 @@ public enum QueriesMapper {
         + "(SELECT id_classes FROM stud_classes WHERE student IN (SELECT student FROM stud_classes WHERE id_classes IN (*?*F))) "
         + "JOIN classes USING (id_classes)"),
 
+        BUILD_SCHEDULE_GET_CLASSIDS("SELECT id_classes FROM classes"),
+
+        BUILD_SCHEDULE_GET_COLLISIONS("SELECT DISTINCT cols.id_classes FROM stud_classes c "
+        + "JOIN stud_classes cols USING (student) "
+        + "WHERE c.id_classes <> cols.id_classes AND c.id_classes = ?"),
+
+        BUILD_SCHEDULE_SET_TIME("UPDATE classes SET slot_id = ? WHERE id_classes = ?"),
+
         ALTERNATIVES("SELECT ts.time_slot_id, Cl.id_classes "
         + "FROM (SELECT subject, class_type, id_classes FROM Classes WHERE id_classes = ?) current_class, Classes Cl "
         + "JOIN time_slots ts ON cl.time_slot_id = ts.time_slot_id "

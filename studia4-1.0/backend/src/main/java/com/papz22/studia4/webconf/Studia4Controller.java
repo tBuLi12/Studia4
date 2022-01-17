@@ -3,6 +3,7 @@ package com.papz22.studia4.webconf;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,6 +19,7 @@ import com.papz22.studia4.utility.exception.InvalidRequestParameterException;
 import com.papz22.studia4.utility.jdbc.JDCBConnection;
 import com.papz22.studia4.utility.jdbc.PeselExtractor;
 import com.papz22.studia4.utility.jdbc.QueriesMapper;
+import com.papz22.studia4.utility.schedule.ScheduleSolver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -593,6 +595,50 @@ public class Studia4Controller {
         } catch(SQLException e) {
             e.printStackTrace();
         }
-    } 
+    }
+
+    @GetMapping("build-schedule")
+    void buildSchedule()
+    {
+        final int N_SLOTS = 30;
+        if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) return;
+            HashMap<String, String[]> collisions = new HashMap<>();
+
+        try
+        {
+            JDCBConnection connection = new JDCBConnection();
+            ResultSet rs = connection.getQueryResut(QueriesMapper.BUILD_SCHEDULE_GET_CLASSIDS);
+            ArrayList<String> result = new ArrayList<>();
+            while(rs.next()) {
+                result.add(rs.getString("id_classes"));
+            }
+            String[] classIDs = result.toArray(new String[0]);
+            for (String id : classIDs)
+            {
+                ArrayList<String> subResult = new ArrayList<>();
+                ResultSet subRs = connection.getQueryResultSet(QueriesMapper.BUILD_SCHEDULE_GET_COLLISIONS, id);
+                while(rs.next())
+                {
+                    subResult.add(subRs.getString("id_classes"));
+                }
+                String[] collsIDs = result.toArray(new String[0]);
+                collisions.put(id, collsIDs);
+            }
+            ScheduleSolver solver = new ScheduleSolver(classIDs, collisions, N_SLOTS);
+            HashMap<String, Integer> solvedSchedule = solver.solve();
+            
+            for (Map.Entry<String, Integer> entry : solvedSchedule.entrySet())
+            {
+                ArrayList<String> subParams = new ArrayList<>();
+                subParams.add(entry.getKey());
+                subParams.add(entry.getValue().toString());
+                connection.executeUpdateOrDelete(QueriesMapper.BUILD_SCHEDULE_SET_TIME, subParams);
+            }
+            connection.closeConnection();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

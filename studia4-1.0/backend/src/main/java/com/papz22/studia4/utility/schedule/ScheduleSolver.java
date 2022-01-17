@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 
 
-class ScheduleSolver {
+public class ScheduleSolver {
     Schedule schedule;
-    ScheduleSolver(String[] classes, Map<String, String[]> collisions, int nSlots) {
+    public ScheduleSolver(String[] classes, Map<String, String[]> collisions, int nSlots) {
         schedule.classes = new Class[classes.length];
         HashMap<String, Class> mapping = new HashMap<>();
         for (String cls: classes) {
@@ -22,7 +22,7 @@ class ScheduleSolver {
             }
         }
     }
-    HashMap<String, Integer> solve() {
+    public HashMap<String, Integer> solve() {
         schedule.backtrack();
         HashMap<String, Integer> res = new HashMap<>();
         for (Class cls: schedule.classes) {
