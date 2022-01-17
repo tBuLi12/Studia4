@@ -544,9 +544,8 @@ public class Studia4Controller {
             ParametersValidator.isInteger(id);
             if (action.matches("approve")) {
                 connection.executeUpdateOrDelete(QueriesMapper.RESCHEDULE, id);
-            } else {
-                connection.executeUpdateOrDelete(QueriesMapper.DELETE_REQUEST_CHANGE_GROUP, id);
-            }
+            } 
+            connection.executeUpdateOrDelete(QueriesMapper.DELETE_REQUEST_CHANGE_GROUP, id);
             connection.closeConnection();
         } catch(InvalidRequestParameterException e) {
             e.printStackTrace();
