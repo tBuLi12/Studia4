@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="Back" fx:id="Back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.papz22.studia4.gui.ScheduleController">
+   <children>
+      <ToolBar layoutX="14.0" layoutY="25.0" prefHeight="40.0" prefWidth="581.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <Button fx:id="NewsButton" mnemonicParsing="false" onAction="#news" prefHeight="26.0" prefWidth="113.0" text="Aktualności" />
+            <Button fx:id="SubjectsButton" mnemonicParsing="false" onAction="#subjects" prefHeight="26.0" prefWidth="113.0" text="Przedmioty" />
+            <Button fx:id="ScheduleButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="113.0" text="Plan zajęć" />
+            <Button fx:id="GradesButton" mnemonicParsing="false" onAction="#grades" prefHeight="26.0" prefWidth="113.0" text="Oceny" />
+            <Button fx:id="RegisterButton" mnemonicParsing="false" onAction="#register" prefHeight="26.0" prefWidth="113.0" text="Rejestracja" />
+        </items>
+      </ToolBar>
+      <Label alignment="CENTER" layoutX="219.0" layoutY="88.0" prefHeight="18.0" prefWidth="151.0" text="PLAN ZAJĘĆ" AnchorPane.leftAnchor="219.0" AnchorPane.rightAnchor="229.8" AnchorPane.topAnchor="88.0" />
+      <GridPane id="TableGrid" layoutX="30.0" layoutY="127.0" prefHeight="242.0" prefWidth="549.0" AnchorPane.bottomAnchor="30.599999999999994" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.399999999999977" AnchorPane.topAnchor="127.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Pane id="ValuePane" fx:id="Pane14" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <Pane id="ValuePane" fx:id="Pane15" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+            <Pane id="ValuePane" fx:id="Pane21" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Pane id="ValuePane" fx:id="Pane11" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Pane id="ValuePane" fx:id="Pane12" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Pane id="ValuePane" fx:id="Pane13" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Pane id="ValuePane" fx:id="Pane22" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Pane id="ValuePane" fx:id="Pane24" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Pane id="ValuePane" fx:id="Pane25" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+            <Pane id="ValuePane" fx:id="Pane31" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Pane id="ValuePane" fx:id="Pane32" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Pane id="ValuePane" fx:id="Pane33" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <Pane id="ValuePane" fx:id="Pane34" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+            <Pane id="ValuePane" fx:id="Pane35" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+            <Pane id="ValuePane" fx:id="Pane42" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Pane id="ValuePane" fx:id="Pane43" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <Pane id="ValuePane" fx:id="Pane44" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+            <Pane id="ValuePane" fx:id="Pane51" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Pane id="ValuePane" fx:id="Pane53" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+            <Pane id="ValuePane" fx:id="Pane54" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+            <Pane id="ValuePane" fx:id="Pane55" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+            <Pane id="ValuePane" fx:id="Pane61" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Pane id="ValuePane" fx:id="Pane62" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Pane id="ValuePane" fx:id="Pane63" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+            <Pane id="ValuePane" fx:id="Pane64" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+            <Pane id="ValuePane" fx:id="Pane65" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+               <children>
+                  <Label alignment="CENTER" layoutY="8.0" prefHeight="18.0" prefWidth="92.0" text="Poniedziałek" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+               <children>
+                  <Label alignment="CENTER" layoutY="8.0" prefHeight="18.0" prefWidth="92.0" text="Wtorek" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+               <children>
+                  <Label alignment="CENTER" layoutX="-1.0" layoutY="8.0" prefHeight="18.0" prefWidth="94.0" text="Środa" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
+               <children>
+                  <Label alignment="CENTER" layoutX="-1.0" layoutY="8.0" prefHeight="18.0" prefWidth="94.0" text="Czwartek" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5">
+               <children>
+                  <Label alignment="CENTER" layoutX="4.0" layoutY="8.0" prefHeight="18.0" prefWidth="84.0" text="Piątek" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+               <children>
+                  <Label alignment="CENTER" layoutX="-9.0" layoutY="7.0" prefHeight="18.0" prefWidth="102.0" text="8:15-10:00" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+               <children>
+                  <Label alignment="CENTER" layoutX="-5.0" layoutY="8.0" prefHeight="18.0" prefWidth="101.0" text="10:15-12:00" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+               <children>
+                  <Label alignment="CENTER" layoutX="-3.0" layoutY="8.0" prefHeight="18.0" prefWidth="98.0" text="12:15-14:00" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+               <children>
+                  <Label alignment="CENTER" layoutY="8.0" prefHeight="18.0" prefWidth="94.0" text="14:15-16:00" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
+               <children>
+                  <Label alignment="CENTER" layoutX="-1.0" layoutY="8.0" prefHeight="18.0" prefWidth="94.0" text="16:15-18:00" />
+               </children>
+            </Pane>
+            <Pane id="AttributePane" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6">
+               <children>
+                  <Label alignment="CENTER" layoutY="5.0" prefHeight="0.0" prefWidth="91.0" text="18:15-20:00" />
+               </children>
+            </Pane>
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="WSI" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="BD1" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="PROB" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="PAP" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

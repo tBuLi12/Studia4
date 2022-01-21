@@ -1,0 +1,46 @@
+.label{
+    -fx-font-size: 15;
+    -fx-font-family: "Times New Roman";
+    -fx-text-fill: "black";
+}
+
+#TableGrid{
+	-fx-background-color: #baffba;
+	-fx-background-insets: 0.0 5.0 0.0 5.0;
+	-fx-border-style: solid inside;
+	-fx-border-width: 2;
+}
+
+#ValuePane{
+    -fx-border-width: 2;
+    -fx-border-style: solid inside;
+    -fx-background-color: #baffba;
+}
+
+#AttributePane{
+	-fx-border-width: 2;
+    -fx-border-style: solid inside;
+    -fx-background-color: #5ebfff;
+}
+
+#Back{
+	-fx-background-color: #ffffff;
+}
+
+#ThemeRadioButton{
+	-fx-font-size: 15;
+    -fx-font-family: "Times New Roman";
+    -fx-text-fill: "black";
+}
+
+#SubjectButton{
+	-fx-border-width: 2;
+	-fx-border-style: solid inside;
+	-fx-background-color: transparent;
+	-fx-text-fill: "black";
+    -fx-display: inline-block;
+}
+
+#SubjectButton:hover{
+    -fx-background-color: #9ab19a;
+}
