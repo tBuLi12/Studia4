@@ -8,39 +8,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class ScheduleController {
-
+public class SubjectPageController {
+	
 	@FXML
-	Button ScheduleButton;
+	Label SubjectLabel;
 	@FXML
-	Button NewsButton;
+	Label NameLabel, LabLabel, GroupLabel;
 	@FXML
-	Button SubjectsButton;
+	Label TextNameLabel, TextLabLabel, TextGroupLabel;
 	@FXML
-	Button GradesButton;
-	@FXML
-	Button RegisterButton;
-	@FXML AnchorPane Back;
+	AnchorPane Back;
 	
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
-	
-//    Label text = new Label("WSI"); 
-//	@FXML
-//    Pane Pane42;
-//	public void on_start(ActionEvent event) throws IOException {
-//	    Pane42.getChildren().add(text);
-//	    text.textFillProperty();
-//	    
-//	}
 	
 	String Theme;
 	double Width, Height;
@@ -51,6 +36,35 @@ public class ScheduleController {
 	public void set_Size(double width, double height) {
 		Back.setPrefWidth(width);
 		Back.setPrefHeight(height);
+	}
+	
+	public void load_data(String subject, String name, String lab, String group) {
+		SubjectLabel.setText(subject);
+		TextNameLabel.setText(name);
+		TextLabLabel.setText(lab);
+		TextGroupLabel.setText(group);
+	}
+	
+	public void schedule(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("TimeTable.fxml"));	
+		root = loader.load();
+		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
+		ScheduleController scheduleController = loader.getController();
+//		scheduleController.on_start(event);
+		scheduleController.set_Theme(Theme);
+		scheduleController.set_Size(Width, Height);
+
+		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+		scene = new Scene(root);
+		stage.setScene(scene);
+		
+		String css = this.getClass().getResource(Theme).toExternalForm();
+		scene.getStylesheets().add(css); // lepszy zapis jak mamy wiele scene
+		
+		stage.show();
 	}
 	
 	public void news(ActionEvent event) throws IOException {
@@ -84,13 +98,13 @@ public class ScheduleController {
 		SubjectsController subjectsController = loader.getController();
 		subjectsController.set_Theme(Theme);
 		subjectsController.set_Size(Width, Height);
-
+		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
-
+		
 		String css = this.getClass().getResource(Theme).toExternalForm();
-		scene.getStylesheets().add(css);
+		scene.getStylesheets().add(css); // lepszy zapis jak mamy wiele scene
 		
 		stage.show();
 	}
@@ -110,7 +124,7 @@ public class ScheduleController {
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
-
+		
 		String css = this.getClass().getResource(Theme).toExternalForm();
 		scene.getStylesheets().add(css); // lepszy zapis jak mamy wiele scene
 		
@@ -131,58 +145,10 @@ public class ScheduleController {
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
-
+		
 		String css = this.getClass().getResource(Theme).toExternalForm();
 		scene.getStylesheets().add(css); // lepszy zapis jak mamy wiele scene
 		
 		stage.show();
 	}
-
-	public void show_subject(ActionEvent event) throws IOException {
-//		Button butt = (Button)event.getSource();
-//		System.out.println(butt.getText());
-		 go_to_subject(event);
-		
-	}
-	public void go_to_subject(ActionEvent event) throws IOException{
-
-	
-		Button butt = (Button)event.getSource();
-		String subject = butt.getText();
-
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("SubjectPage.fxml"));	
-	 	root = loader.load();
-	 	
-		Width = Back.getWidth();
-		Height = Back.getHeight();
-		
-	 	SubjectPageController subjectPageController = loader.getController();
-		subjectPageController.set_Theme(Theme);
-		subjectPageController.set_Size(Width, Height);
-	 	switch(subject){
-			case "WSI":
-				subjectPageController.load_data(subject, "Karol Orzechowski", "Nie", "3");
-				break;
-			case "BD1":
-				subjectPageController.load_data(subject, "Michał Kopeć", "Tak", "2");
-				break;
-			case "PROB":
-				subjectPageController.load_data(subject, "Wiktor Pytlewski", "Nie", "4");
-				break;
-			case "PAP":
-				subjectPageController.load_data(subject, "Jeremi Sobierski", "Tak", "5");
-				break;
-		 }
-	 	
-	 	stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-	 	scene = new Scene(root);
-	 	stage.setScene(scene);
-
-	 	String css = this.getClass().getResource(Theme).toExternalForm();
-	 	scene.getStylesheets().add(css);
-		
-	 	stage.show();
-
-	 }
-	
 }

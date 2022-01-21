@@ -2,12 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="Back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.papz22.studia4.gui.SubjectsController">
+<AnchorPane id="Back" fx:id="Back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.papz22.studia4.gui.SubjectPageController">
    <children>
       <ToolBar layoutX="14.0" layoutY="25.0" prefHeight="40.0" prefWidth="581.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -18,11 +18,17 @@
             <Button fx:id="RegisterButton" mnemonicParsing="false" onAction="#register" prefHeight="26.0" prefWidth="113.0" text="Rejestracja" />
         </items>
       </ToolBar>
-      <ListView fx:id="SubjectListView" layoutX="200.0" layoutY="118.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="118.0" />
       <Label fx:id="SubjectLabel" alignment="CENTER" layoutX="167.0" layoutY="75.0" prefHeight="26.0" prefWidth="266.0" text="Twoje przedmioty:" textFill="WHITE" AnchorPane.leftAnchor="167.0" AnchorPane.rightAnchor="167.0" AnchorPane.topAnchor="75.0">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
+      <Label fx:id="TextNameLabel" alignment="CENTER" layoutX="319.0" layoutY="154.0" prefHeight="18.0" prefWidth="132.0" text="Name" AnchorPane.leftAnchor="319.0" AnchorPane.rightAnchor="149.0" AnchorPane.topAnchor="154.0" />
+      <Separator layoutX="297.0" layoutY="126.0" orientation="VERTICAL" prefHeight="200.0" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="296.6" AnchorPane.topAnchor="126.0" />
+      <Label fx:id="TextLabLabel" alignment="CENTER" layoutX="319.0" layoutY="200.0" prefHeight="18.0" prefWidth="132.0" text="Tak" AnchorPane.leftAnchor="319.0" AnchorPane.rightAnchor="149.0" AnchorPane.topAnchor="200.0" />
+      <Label fx:id="TextGroupLabel" alignment="CENTER" layoutX="319.0" layoutY="246.0" prefHeight="18.0" prefWidth="132.0" text="2" AnchorPane.leftAnchor="319.0" AnchorPane.rightAnchor="149.0" AnchorPane.topAnchor="246.0" />
+      <Label fx:id="NameLabel" alignment="CENTER" layoutX="166.0" layoutY="150.0" prefHeight="26.0" prefWidth="114.0" text="Prowadzący/a:" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="319.6" AnchorPane.topAnchor="150.0" />
+      <Label fx:id="LabLabel" alignment="CENTER" layoutX="166.0" layoutY="200.0" prefHeight="17.0" prefWidth="114.0" text="Labolatorium:" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="319.6" AnchorPane.topAnchor="200.0" />
+      <Label fx:id="GroupLabel" alignment="CENTER" layoutX="166.0" layoutY="246.0" prefHeight="17.0" prefWidth="114.0" text="Grupa:" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="319.6" AnchorPane.topAnchor="246.0" />
    </children>
 </AnchorPane>

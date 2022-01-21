@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="Back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.papz22.studia4.gui.ScheduleController">
+<AnchorPane id="Back" fx:id="Back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.papz22.studia4.gui.ScheduleController">
    <children>
       <ToolBar layoutX="14.0" layoutY="25.0" prefHeight="40.0" prefWidth="581.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -52,15 +52,12 @@
             <Pane id="ValuePane" fx:id="Pane31" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Pane id="ValuePane" fx:id="Pane32" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Pane id="ValuePane" fx:id="Pane33" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <Pane id="ValuePane" fx:id="Pane34" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <Pane id="ValuePane" fx:id="Pane34" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
             <Pane id="ValuePane" fx:id="Pane35" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-            <Pane id="ValuePane" fx:id="Pane41" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Pane id="ValuePane" fx:id="Pane42" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Pane id="ValuePane" fx:id="Pane43" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
             <Pane id="ValuePane" fx:id="Pane44" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-            <Pane id="ValuePane" fx:id="Pane45" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
             <Pane id="ValuePane" fx:id="Pane51" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Pane id="ValuePane" fx:id="Pane52" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <Pane id="ValuePane" fx:id="Pane53" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
             <Pane id="ValuePane" fx:id="Pane54" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
             <Pane id="ValuePane" fx:id="Pane55" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="5" />
@@ -125,7 +122,10 @@
                   <Label alignment="CENTER" layoutY="5.0" prefHeight="0.0" prefWidth="91.0" text="18:15-20:00" />
                </children>
             </Pane>
-            <Button id="ValuePane" mnemonicParsing="false" onAction="#show_subject" prefHeight="34.0" prefWidth="112.0" text="WSI" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="WSI" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="BD1" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="PROB" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button id="SubjectButton" mnemonicParsing="false" onAction="#go_to_subject" prefHeight="10000.0" prefWidth="10000.0" text="PAP" GridPane.columnIndex="4" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

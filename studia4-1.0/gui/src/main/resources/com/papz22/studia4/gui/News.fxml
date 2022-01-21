@@ -5,7 +5,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="Back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.papz22.studia4.gui.StudiaController">
+<AnchorPane id="Back" fx:id="Back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.papz22.studia4.gui.StudiaController">
    <children>
       <ToolBar layoutX="14.0" layoutY="25.0" prefHeight="40.0" prefWidth="581.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -16,6 +16,6 @@
             <Button fx:id="RegisterButton" mnemonicParsing="false" onAction="#register" prefHeight="26.0" prefWidth="113.0" text="Rejestracja" />
         </items>
       </ToolBar>
-      <Label layoutX="259.0" layoutY="73.0" text="AKTUALNOSCI " textFill="WHITE" />
+      <Label layoutX="259.0" layoutY="73.0" text="AKTUALNOSCI " textFill="WHITE" AnchorPane.leftAnchor="259.0" AnchorPane.rightAnchor="259.4" AnchorPane.topAnchor="73.0" />
    </children>
 </AnchorPane>

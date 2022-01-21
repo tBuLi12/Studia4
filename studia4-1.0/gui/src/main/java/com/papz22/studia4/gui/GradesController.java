@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -31,6 +32,8 @@ public class GradesController {
 	ToolBar StudiaToolBar;
 	@FXML
 	FlowPane StudiaFlowPane;
+	@FXML
+	AnchorPane Back;
 	
 	private Stage stage;
 	private Scene scene;
@@ -47,6 +50,7 @@ public class GradesController {
 	Pane Pane10, Pane11, Pane20, Pane21, Pane30, Pane31;
 	
 	String Theme;
+	double Width, Height;
 	
 	public void grades_on_start(ActionEvent event) throws IOException {
 		Pane10.getChildren().add(BD1);
@@ -60,14 +64,22 @@ public class GradesController {
 	public void set_Theme(String theme) {
 		Theme = theme;
 	}
+	public void set_Size(double width, double height) {
+		Back.setPrefWidth(width);
+		Back.setPrefHeight(height);
+	}
 	
 	public void schedule(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("TimeTable.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		ScheduleController scheduleController = loader.getController();
-		scheduleController.on_start(event);
+//		scheduleController.on_start(event);
 		scheduleController.set_Theme(Theme);
+		scheduleController.set_Size(Width, Height);
 	
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
@@ -83,9 +95,13 @@ public class GradesController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Grades.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		GradesController gradesController = loader.getController();
 		gradesController.grades_on_start(event);
 		gradesController.set_Theme(Theme);
+		gradesController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
@@ -102,8 +118,12 @@ public class GradesController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("News.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		StudiaController studiaController = loader.getController();
 		studiaController.set_Theme(Theme);
+		studiaController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
@@ -119,8 +139,12 @@ public class GradesController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Subjects.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		SubjectsController subjectsController = loader.getController();
 		subjectsController.set_Theme(Theme);
+		subjectsController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
@@ -136,8 +160,12 @@ public class GradesController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Registration.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		StudiaController studiaController = loader.getController();
 		studiaController.set_Theme(Theme);
+		studiaController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);

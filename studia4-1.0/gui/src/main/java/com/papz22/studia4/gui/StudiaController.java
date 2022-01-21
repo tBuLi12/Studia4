@@ -42,21 +42,36 @@ public class StudiaController {
 	
 	String Theme;
 	
+	double Width;
+	double Height;
+	
 	public void set_Theme(String theme) {
 		Theme = theme;
 	}
+	
+	public void set_Size(double width, double height) {
+		Back.setPrefWidth(width);
+		Back.setPrefHeight(height);
+	}
+	
 	
 	public void schedule(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("TimeTable.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		ScheduleController scheduleController = loader.getController();
-		scheduleController.on_start(event);
+//		scheduleController.on_start(event);
 		scheduleController.set_Theme(Theme);
+		scheduleController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
 		stage.setScene(scene);
+//		stage.setWidth(Width);
+//		stage.setHeight(Height);
 		
 		String css = this.getClass().getResource(Theme).toExternalForm();
 		scene.getStylesheets().add(css); // lepszy zapis jak mamy wiele scene
@@ -68,8 +83,12 @@ public class StudiaController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("News.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		StudiaController studiaController = loader.getController();
 		studiaController.set_Theme(Theme);
+		studiaController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
@@ -85,8 +104,12 @@ public class StudiaController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Subjects.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		SubjectsController subjectsController = loader.getController();
 		subjectsController.set_Theme(Theme);
+		subjectsController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
@@ -102,9 +125,13 @@ public class StudiaController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Grades.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		GradesController gradesController = loader.getController();
 		gradesController.grades_on_start(event);
 		gradesController.set_Theme(Theme);
+		gradesController.set_Size(Width, Height);
 
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
@@ -121,8 +148,12 @@ public class StudiaController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Registration.fxml"));	
 		root = loader.load();
 		
+		Width = Back.getWidth();
+		Height = Back.getHeight();
+		
 		StudiaController studiaController = loader.getController();
 		studiaController.set_Theme(Theme);
+		studiaController.set_Size(Width, Height);
 		
 		stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		scene = new Scene(root);
